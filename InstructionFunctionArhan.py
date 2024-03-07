@@ -1,5 +1,31 @@
 register = {'x0':'00000','x1':'00001','x2':'00010','x3':'00011','x4':'00100','x5':'00101','x6':'00110','x7':'00111','x8':'01000','x9':'01001','x10':'01010','x11':'01011','x12':'01100','x13':'01101','x14':'01110','x15':'01111','x16':'10000','x17':'10001','x18':'10010','x19':'10011','x20':'10100','x21':'10101','x22':'10110','x23':'10111','x24':'11000','x25':'11001','x26':'11010','x27':'11011','x28':'11100','x29':'11101','x30':'11110','x31':'11111'}
 
+def ImmToBin(imm):
+    binabs = ''
+    absolute = abs(imm)
+    maxx = 31
+    while maxx != -1:
+        s = absolute - 2**maxx
+        if s < 0:
+            binabs += '0'
+        else:
+            binabs += '1'
+            absolute = s
+        maxx -= 1
+    
+    if imm >= 0:
+        return binabs
+    else:
+        binabs = ImmToBin(abs(imm)-1)
+        binimm = ''
+        for i in binabs:
+            if i == '0':
+                binimm += '1'
+            else:
+                binimm += '0'
+        return binimm
+
+
 def Add(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
