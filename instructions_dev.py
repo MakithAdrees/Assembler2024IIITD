@@ -18,7 +18,7 @@ def Jalr(ImmtoBin, rd, rs2):
         return(ImmtoBin+register[rs2]+'000'+register[rd]+'1100111')
     except:
         return('SyntaxError')
-def Jalr(ImmtoBin, rs1, rs2):
+def Blt(ImmtoBin, rs1, rs2):
     try:
         return(ImmtoBin+register[rs2]+register[rs1]+'100'+ImmtoBin+'1100011')
     except:
