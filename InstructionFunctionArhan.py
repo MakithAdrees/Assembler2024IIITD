@@ -30,35 +30,41 @@ def Add(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
     except:
-        return 'SyntaxError'
+        return 'RegisterNotFound'
     
 def Stlu(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
     except:
-         return 'SyntaxError'
+         return 'RegisterNotFound'
      
 def Or(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
     except:
-        return 'SyntaxError'
+        return 'RegisterNotFound'
 
 def Sltiu(rd, rs, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'NoBitsToStoreImmediate'
     try:
-        return ImmToBin(imm)+register[rs]+'011'+register[rd]+'0010011'
+        return ImmToBin(imm)[-12:]+register[rs]+'011'+register[rd]+'0010011'
     except:
-        return 'SyntaxError'
+        return 'RegisterNotFound'
 
 def Bne(rs1, rs2, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'NoBitsToStoreImmediate'
     try:
-        return ImmToBin(imm)+register[rs2]+register[rs1]+'001'+ImmToBin(imm)+'1100011'
+        return ImmToBin(imm)[-12:-5]+register[rs2]+register[rs1]+'001'+ImmToBin(imm)[-5:]+'1100011'
     except:
         return 'SyntaxError'
     
 def Bltu(rs1, rs2, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'NoBitsToStoreImmediate'
     try:
-        return ImmToBin(imm)+register[rs2]+register[rs1]+'111'+ImmToBin(imm)+'1100011'
+        return ImmToBin(imm)[-12:-5]+register[rs2]+register[rs1]+'111'+ImmToBin(imm)[-5:]+'1100011'
     except:
         return 'SyntaxError'
     
