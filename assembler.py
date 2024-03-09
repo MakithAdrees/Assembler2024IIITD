@@ -53,7 +53,8 @@ def label(lines):
 
 
 def main(lines, register):
-
+    if len(lines[a]) == 0 :
+        continue
     for a in range(len(lines)):
         if len(lines[a]) > 3:
             print('InvalidInstruction at line', a+1)
