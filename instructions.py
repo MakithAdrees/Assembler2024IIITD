@@ -174,3 +174,82 @@ def jal(rd, imm, register):
         if rd not in register:
             return ('RegisterNotFound')
         return ('Error, Somewhere')
+def Sub(rd, rs1, rs2, register):
+    try:
+        return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
+        
+def Xor(rd, rs1, rs2, register):
+    try:
+        return('0000000'+register[rs2]+register[rs1]+'100'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
+        
+def And(rd, rs1, rs2, register):
+    try:
+        return('0000000'+register[rs2]+register[rs1]+'111'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
+
+def Jalr(rd, rs1, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        if rs1=='x6';
+            return(ImmtoBin(imm)[-12:]+register['t1']+'000'+register[rd]+'1100111')
+        else:
+            return(ImmtoBin(imm)[-12:]+register[rs1]+'000'+register[rd]+'1100111')
+    except:
+        return('SyntaxError')
+        
+def Blt(rs1, rs2, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        return(ImmtoBin(imm)[-13]+ImmtoBin(imm)[-11:-5]+register[rs2]+register[rs1]+'100'+ImmtoBin(imm)[-5:-1]+ImmtoBin(imm)[-12]+'1100011')
+    except:
+        return('SyntaxError')
+        
+def Lui(rd, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        return(ImmtoBin(imm)[-32:-12]+register[rd]+'0110111')
+    except:
+        return('SyntaxError')
+
+
+def Instruction_Check(register, inst, rs1, rs2, rd=None):
+    if rs1 or rs2 or rd not in register:
+            return('Error, Register Index out of range')
+    elif inst=="add":
+        return Add(rd, rs1, rs2, register)
+    elif inst=="sub":
+        if rs1=="x0":
+            return Sub(rd, 'zero', rs2, register)
+        else:
+            return Sub(rd, rs1, rs2, register)
+    elif inst=="slt":
+        return Slt(rd, rs1, rs2, register)
+    elif inst=="sltu":
+        return Sltu(rd, rs1, rs2, register)
+    elif inst=="xor":
+        return Xor(rd, rs1, rs2, register)
+    elif inst=="sll":
+        return Sll(rd, rs1, rs2, register)
+    elif inst=="srl":
+        return Srl(rd, rs1, rs2, register)
+    elif inst=="or":
+        return Or(rd, rs1, rs2, register)
+    elif inst=="and":
+        return And(rd, rs1, rs2, register)
+    elif inst=="lw":
+        return Lw(rd, rs1, rs2, register)
+    elif inst=="addi":
+        return Addi(rd, rs1, rs2, register)
+    elif inst=="sltiu":
+        return Sltiu(rd, rs1, rs2, register)
+    elif inst=="jalr":
+        return Jalr(rd, rs1, rs2, register)
+    return('IncorrectInstruction')
