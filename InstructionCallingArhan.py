@@ -1,5 +1,5 @@
 lines = [['add','rd,rs1,rs2'],['hi:','lw','rd,imm(rs1)'],['jal','rd,imm']]  #stores all lines from the input file
-register = {}
+register = {}   
 
 def label(lines):
     labels = {}
