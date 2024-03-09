@@ -44,7 +44,7 @@ def main(lines, register):
                 try:
                     ff(instruction, reg[0], reg2[1][:-1], int(reg2[0]))
                 except:
-                    ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateValue')
+                    ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateVal')
             
             elif lines[a][1].count(',') == 1:
                 reg = lines[a][1].split(',')
