@@ -44,13 +44,40 @@ def Sub(rd, rs1, rs2, register):
     except:
         return('SyntaxError')
 
+def Slt(rd, rs1, rs2, register):
+    try:
+        return ('0000000' + register[rs2] + register[rs1] + '010' + register[rd] + '0110011')
+    except:
+        if rd or rs1 or rs2 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def Stlu(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
+    except:
+         return 'SyntaxError'
+
+def Xor(rd, rs1, rs2, register):
+    try:
+        return('0000000'+register[rs2]+register[rs1]+'100'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
+
 def Sll(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'001'+register[rd]+'0110011'
     except:
         return 'RegisterNotFound'
     
-
+def Srl(rd, rs1, rs2, register):
+    try:
+        return ('0000000' + register[rs2] + register[rs1] + '101' + register[rd] + '0110011')
+    except:
+        if rd or rs1 or rs2 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+        
 def Lw(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return 'NoBitsToStoreImmediate'
@@ -85,12 +112,6 @@ def Bge(rs1, rs2, imm, register):
         return ImmToBin(imm)[-12:-10]+register[rs2]+register[rs1]+'101'+ImmToBin(imm)[-5:]+ImmToBin(imm)[-1]+'1100011'
     except:
         return 'SyntaxError'
-    
-def Stlu(rd, rs1, rs2, register):
-    try:
-        return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
-    except:
-         return 'SyntaxError'
      
 def Or(rd, rs1, rs2, register):
     try:
@@ -123,21 +144,6 @@ def Bltu(rs1, rs2, imm, register):
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
     except:
         return 'SyntaxError'
-def slt(rd, rs1, rs2, register):
-    try:
-        return ('0000000' + register[rs2] + register[rs1] + '010' + register[rd] + '0110011')
-    except:
-        if rd or rs1 or rs2 not in register:
-            return ('RegisterNotFound')
-        return ('Error, Somewhere')
-
-def srl(rd, rs1, rs2, register):
-    try:
-        return ('0000000' + register[rs2] + register[rs1] + '101' + register[rd] + '0110011')
-    except:
-        if rd or rs1 or rs2 not in register:
-            return ('RegisterNotFound')
-        return ('Error, Somewhere')
 
 def addi(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
@@ -178,12 +184,6 @@ def jal(rd, imm, register):
         if rd not in register:
             return ('RegisterNotFound')
         return ('Error, Somewhere')
-        
-def Xor(rd, rs1, rs2, register):
-    try:
-        return('0000000'+register[rs2]+register[rs1]+'100'+register[rd]+'0110011')
-    except:
-        return('SyntaxError')
         
 def And(rd, rs1, rs2, register):
     try:
