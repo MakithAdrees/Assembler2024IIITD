@@ -81,3 +81,27 @@ def ImmToBin(imm):
             else:
                 binimm += '0'
         return binimm
+def Instruction_Check(inst, rd=None, rs1=None, rs2=None, imm=None, register):
+    if rs1 or rs2 or rd or imm not in register:
+            return('Error, Register Index out of range')
+    elif inst =="sw":
+        return Sw(rs1,rs2,imm,register)
+    elif inst =="beq":
+        return Beq(rs1,rs2,imm,register)
+    elif inst =="bne":
+        return Bne(rs1,rs2,imm,register)
+    elif inst =="blt":
+        return Blt(rs1,rs2,imm,register)
+    elif inst =="bge":
+        return Bge(rs1,rs2,imm,register)
+    elif inst =="bltu":
+        return Bltu(rs1,rs2,imm,register)
+    elif inst =="bgeu":
+        return Bgeu(rs1,rs2,imm,register)
+    elif inst =="lui":
+        return Lui(rd,imm,register)
+    elif inst =="auipc":
+        return Auipc(rd,imm,register)
+    elif inst =="jal":
+        return Jal(rd,imm,register)
+    return('IncorrectInstruction')
