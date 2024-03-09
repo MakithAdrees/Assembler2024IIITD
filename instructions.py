@@ -145,7 +145,7 @@ def Bltu(rs1, rs2, imm, register):
     except:
         return 'SyntaxError'
 
-def addi(rd, rs1, imm, register):
+def Addi(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return ('NoBitsToStoreImmediate')
     try:
@@ -155,7 +155,7 @@ def addi(rd, rs1, imm, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
-def bgeu(rs1, rs2, imm, register):
+def Bgeu(rs1, rs2, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return ('NoBitsToStoreImmediate')
     try:
@@ -165,7 +165,7 @@ def bgeu(rs1, rs2, imm, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
-def auipc(rd, imm, register):
+def Auipc(rd, imm, register):
     if imm >= 2**19 or imm < -2**19:
         return ('NoBitsToStoreImmediate')
     try:
@@ -175,7 +175,7 @@ def auipc(rd, imm, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
-def jal(rd, imm, register):
+def Jal(rd, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return ('NoBitsToStoreImmediate')
     try:
@@ -251,4 +251,24 @@ def Instruction_Check(register, inst, rs1, rs2, rd=None):
         return Sltiu(rd, rs1, rs2, register)
     elif inst=="jalr":
         return Jalr(rd, rs1, rs2, register)
+    elif inst =="sw":
+        return Sw(rs1,rs2,imm,register)
+    elif inst =="beq":
+        return Beq(rs1,rs2,imm,register)
+    elif inst =="bne":
+        return Bne(rs1,rs2,imm,register)
+    elif inst =="blt":
+        return Blt(rs1,rs2,imm,register)
+    elif inst =="bge":
+        return Bge(rs1,rs2,imm,register)
+    elif inst =="bltu":
+        return Bltu(rs1,rs2,imm,register)
+    elif inst =="bgeu":
+        return Bgeu(rs1,rs2,imm,register)
+    elif inst =="lui":
+        return Lui(rd,imm,register)
+    elif inst =="auipc":
+        return Auipc(rd,imm,register)
+    elif inst =="jal":
+        return Jal(rd,imm,register)
     return('IncorrectInstruction')
