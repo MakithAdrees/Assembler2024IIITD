@@ -26,24 +26,28 @@ def ImmToBin(imm):
         return binimm
 
 
-# def Sub2Complement(rd, rs, register):
-#     try:
-#         return '0100000'+register['zero']+register[rs]+'000'+register[rd]+'0110011'
-#     except:
-#         return 'RegisterNotFound'
-
+# all instructions....
+    
+# R type instructions_______________________________________________________________________________________
 
 def Add(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
     except:
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
         return 'SyntaxError'
-
+    
 def Sub(rd, rs1, rs2, register):
     try:
-        return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
+        if rs1=='x0':
+            return('0100000'+register[rs2]+register['zero']+'000'+register[rd]+'0110011')
+        else:
+            return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
     except:
-        return('SyntaxError')
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
+        return 'SyntaxError'
 
 def Slt(rd, rs1, rs2, register):
     try:
@@ -51,25 +55,31 @@ def Slt(rd, rs1, rs2, register):
     except:
         if rd or rs1 or rs2 not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
 def Sltu(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
     except:
+         if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
          return 'SyntaxError'
 
 def Xor(rd, rs1, rs2, register):
     try:
         return('0000000'+register[rs2]+register[rs1]+'100'+register[rd]+'0110011')
     except:
-        return('SyntaxError')
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
+        return 'SyntaxError'
 
 def Sll(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'001'+register[rd]+'0110011'
     except:
-        return 'RegisterNotFound'
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
+        return 'SuntaxError'
     
 def Srl(rd, rs1, rs2, register):
     try:
@@ -77,69 +87,84 @@ def Srl(rd, rs1, rs2, register):
     except:
         if rd or rs1 or rs2 not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
 def Or(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
     except:
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
         return 'SyntaxError'
 
 def And(rd, rs1, rs2, register):
     try:
         return('0000000'+register[rs2]+register[rs1]+'111'+register[rd]+'0110011')
     except:
-        return('SyntaxError')
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound')
+        return 'SyntaxError'
+
+# I type instructions______________________________________________________________________________________
 
 def Lw(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return 'NoBitsToStoreImmediate'
+        return 'Error, ImmediateOutOfRange'
     try:
         return ImmToBin(imm)[-12:]+register[rs1]+'010'+register[rd]+'0000011'
     except:
-        return 'RegisterNotFound'
+        if rs1 or rd not in register:
+            return('RegisterNotFound')
+        return 'SyntaxError'
 
 def Addi(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return ('NoBitsToStoreImmediate')
+        return ('Error, ImmediateOutOfRange')
     try:
         return (ImmToBin(imm)[-12:] + register[rs1] + '000' + register[rd] + '0010011')  #using only the last 12 LSBs
     except:
         if rd or rs1 not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
-def Sltiu(rd, rs, imm, register):
+def Sltiu(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return 'ImmediateOutOfRange'
+        return 'Error, ImmediateOutOfRange'
     try:
-        return ImmToBin(imm)[-12:]+register[rs]+'011'+register[rd]+'0010011'
+        return ImmToBin(imm)[-12:]+register[rs1]+'011'+register[rd]+'0010011'
     except:
+        if rs1 or rd not in register:
+            return('RegisterNotFound')
         return 'SyntaxError'
 
 def Jalr(rd, rs1, imm, register):
     if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
+        return 'Error, ImmediateOutOfRange'
     try:
         if rs1=='x6':
             return(ImmToBin(imm)[-12:]+register['t1']+'000'+register[rd]+'1100111')
         else:
             return(ImmToBin(imm)[-12:]+register[rs1]+'000'+register[rd]+'1100111')
     except:
-        return('SyntaxError')
+        if rs1 or rd not in register:
+            return('RegisterNotFound')
+        return 'SyntaxError'
+
+# S type instructions______________________________________________________________________________________
 
 def Sw(rs2, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return 'NoBitsToStoreImmediate'
+        return 'Error, ImmediateOutOfRange'
     try:
         return ImmToBin(imm)[-12:-5]+register[rs2]+register[rs1]+'010'+ImmToBin(imm)[-5:]+'0100011'
     except:
         return 'SyntaxError'
 
+# B type instructions______________________________________________________________________________________
 
 def Beq(rs1, rs2, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return 'NoBitsToStoreImmediate'
+        return 'Error, ImmediateOutOfRange'
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'000'+s[-5:-1]+s[-12]+'1100011'
@@ -148,7 +173,7 @@ def Beq(rs1, rs2, imm, register):
 
 def Bne(rs1, rs2, imm, register):
     if imm >= 2**12 or imm < -2**12:
-        return 'ImmediateOutOfRange'
+        return 'Error, ImmediateOutOfRange'
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'001'+s[-5:-1]+s[-12]+'1100011'
@@ -157,7 +182,7 @@ def Bne(rs1, rs2, imm, register):
 
 def Bge(rs1, rs2, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return 'NoBitsToStoreImmediate'
+        return 'Error, ImmediateOutOfRange'
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'101'+s[-5:-1]+s[-12]+'1100011'
@@ -166,59 +191,64 @@ def Bge(rs1, rs2, imm, register):
 
 def Bgeu(rs1, rs2, imm, register):
     if imm >= 2**11 or imm < -2**11:
-        return ('NoBitsToStoreImmediate')
+        return ('Error, ImmediateOutOfRange')
     try:
         return (ImmToBin(imm)[-13] + ImmToBin(imm)[-11:-5] + register[rs2] + register[rs1] + '111' + ImmToBin(imm)[-4:0] + ImmToBin(imm)[-11] + '1100011')
     except:
         if rs1 or rs2 not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
 def Blt(rs1, rs2, imm, register):
-    if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
+    if imm >= 2**31 or imm < -2**31:                         
+        return 'Error, ImmediateOutOfRange'
     try:
         return(ImmToBin(imm)[-13]+ImmToBin(imm)[-11:-5]+register[rs2]+register[rs1]+'100'+ImmToBin(imm)[-5:-1]+ImmToBin(imm)[-12]+'1100011')
     except:
-        return('SyntaxError')
+        return 'SyntaxError'
 
 def Bltu(rs1, rs2, imm, register):
     if imm >= 2**12 or imm < -2**12:
-        return 'ImmediateOutOfRange'
+        return 'Error, ImmediateOutOfRange'
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
     except:
         return 'SyntaxError'
 
+# U type instructions______________________________________________________________________________________
+
 def Auipc(rd, imm, register):
     if imm >= 2**19 or imm < -2**19:
-        return ('NoBitsToStoreImmediate')
+        return ('Error, ImmediateOutOfRange')
     try:
         return (ImmToBin(imm)[-32:-12] + register[rd] + '0010111')
     except:
         if rd not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
 def Lui(rd, imm, register):
-    if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
+    if imm >= 2**31 or imm < -2**31:                         
+        return 'Error, ImmediateOutOfRange'
     try:
         return(ImmToBin(imm)[-32:-12]+register[rd]+'0110111')
     except:
-        return('SyntaxError')
+        return 'SyntaxError'
+
+# J type instructions______________________________________________________________________________________
 
 def Jal(rd, imm, register):
     if imm >= 2**20 or imm < -2**20:
-        return ('NoBitsToStoreImmediate')
+        return ('Error, ImmediateOutOfRange')
     try:
         return (ImmToBin(imm)[-21]+ImmToBin(imm)[-11:-1]+ImmToBin(imm)[-12]+ImmToBin(imm)[-20:-12]+register[rd]+'1101111')
     except:
         if rd not in register:
             return ('RegisterNotFound')
-        return ('Error, Somewhere')
+        return 'SyntaxError'
 
+# Function that checks which instruction is called and then calls that function
 
 def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None):
     register = {'zero':'00000','ra':'00001','sp':'00010','gp':'00011','tp':'00100','t0':'00101','t1':'00110','t2':'00111','s0':'01000','fp':'01000','s1':'01001','a0':'01010','a1':'01011','a2':'01100','a3':'01101','a4':'01110','a5':'01111','a6':'10000','a7':'10001','s2':'10010','s3':'10011','s4':'10100','s5':'10101','s6':'10110','s7':'10111','s8':'11000','s9':'11001','s10':'11010','s11':'11011','t3':'11100','t4':'11101','t5':'11110','t6':'11111'}
@@ -227,10 +257,7 @@ def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None):
     if inst=="add":
         return Add(rd, rs1, rs2, register)
     elif inst=="sub":
-        if rs1=="x0":
-            return Sub(rd, 'zero', rs2, register)
-        else:
-            return Sub(rd, rs1, rs2, register)
+        return Sub(rd, rs1, rs2, register)
     elif inst=="slt":
         return Slt(rd, rs1, rs2, register)
     elif inst=="sltu":
@@ -248,7 +275,6 @@ def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None):
     elif inst=="lw":
         return Lw(rd, rs1, rs2, register)
     elif inst=="addi":
-        
         return Addi(rd, rs1, rs2, register)
     elif inst=="sltiu":
         return Sltiu(rd, rs1, rs2, register)
