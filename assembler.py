@@ -4,6 +4,7 @@ from instructions import Instruction_Check as ff
 #Format $python3 Assembler.py input_assembly_code_file_path output_machine_code_file_path
 register = {'zero':'00000','ra':'00001','sp':'00010','gp':'00011','tp':'00100','t0':'00101','t1':'00110','t2':'00111','s0':'01000','fp':'01000','s1':'01001','a0':'01010','a1':'01011','a2':'01100','a3':'01101','a4':'01110','a5':'01111','a6':'10000','a7':'10001','s2':'10010','s3':'10011','s4':'10100','s5':'10101','s6':'10110','s7':'10111','s8':'11000','s9':'11001','s10':'11010','s11':'11011','t3':'11100','t4':'11101','t5':'11110','t6':'11111'}
 
+# function to import file(data) from the txt file
 def import_file(file_path):
     try:
         with open(file_path, 'r') as file:
@@ -14,12 +15,11 @@ def import_file(file_path):
         print('File not found')
         exit()
 
-
 def export_file(file_path, lines):
     with open(file_path, 'w') as file:
         for a in lines:
             file.write(a+'\n')
-        
+
 parser = argparse.ArgumentParser(description='Assembler for RISC-V')
 parser.add_argument('input', type=str, help='Input file path')
 # parser.add_argument('output', type=str, help='Output file path')
@@ -27,9 +27,9 @@ args = parser.parse_args()
 
 lines = import_file(args.input)
 
+# function for splitting the instruction and rest of the part
 for a in range(len(lines)):
     lines[a] = lines[a].split(' ')
-
 
 def LabelToImm(labels, a, label):
     lst = labels[label]
@@ -56,13 +56,13 @@ def main(lines, register):
     # print(lines)
     for a in range(len(lines)):
         if len(lines[a]) > 3:
-            print('InvalidInstruction at line', a+1)
+            print('InvalidInstruction in line', a+1)
 
         if len(lines[a]) == 2 and lines[a][0][-1] == ':':
-            print('InvalidInstruction at line', a+1)
+            print('InvalidInstruction in line', a+1)
 
         if len(lines[a]) == 1:
-            print('InvalidInstruction at line', a+1)
+            print('InvalidInstruction in line', a+1)
 
     
     labels = label(lines)
@@ -71,7 +71,7 @@ def main(lines, register):
         if len(lines[a]) == 0 :
             continue
         if len(lines[a]) > 2:
-            print('InvalidInstruction at line', a+1)
+            print('InvalidInstruction in line', a+1)
 
         if lines[a][0][-1] != ':':
             instruction = lines[a][0]
