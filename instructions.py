@@ -52,7 +52,7 @@ def Slt(rd, rs1, rs2, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
-def Stlu(rd, rs1, rs2, register):
+def Sltu(rd, rs1, rs2, register):
     try:
         return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
     except:
