@@ -119,3 +119,58 @@ def Bltu(rs1, rs2, imm, register):
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
     except:
         return 'SyntaxError'
+def slt(rd, rs1, rs2, register):
+    try:
+        return ('0000000' + register[rs2] + register[rs1] + '010' + register[rd] + '0110011')
+    except:
+        if rd or rs1 or rs2 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def srl(rd, rs1, rs2, register):
+    try:
+        return ('0000000' + register[rs2] + register[rs1] + '101' + register[rd] + '0110011')
+    except:
+        if rd or rs1 or rs2 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def addi(rd, rs1, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return ('NoBitsToStoreImmediate')
+    try:
+        return (ImmToBin(imm)[-12:] + register[rs1] + '000' + register[rd] + '0010011')  #using only the last 12 LSBs
+    except:
+        if rd or rs1 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def bgeu(rs1, rs2, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return ('NoBitsToStoreImmediate')
+    try:
+        return (ImmToBin(imm)[-13] + ImmToBin(imm)[-11:-5] + register[rs2] + register[rs1] + '111' + ImmToBin(imm)[-4:0] + ImmToBin(imm)[-11] + '1100011')
+    except:
+        if rs1 or rs2 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def auipc(rd, imm, register):
+    if imm >= 2**19 or imm < -2**19:
+        return ('NoBitsToStoreImmediate')
+    try:
+        return (ImmToBin(imm)[-32:-12] + register[rd] + '0010111')
+    except:
+        if rd not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def jal(rd, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return ('NoBitsToStoreImmediate')
+    try:
+        return (ImmToBin(imm)[-21]+ImmToBin(imm)[-11:-1]+ImmToBin(imm)[-12]+ImmToBin(imm)[-20:-12])
+    except:
+        if rd not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
