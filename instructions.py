@@ -77,7 +77,19 @@ def Srl(rd, rs1, rs2, register):
         if rd or rs1 or rs2 not in register:
             return ('RegisterNotFound')
         return ('Error, Somewhere')
-        
+
+def Or(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
+    except:
+        return 'SyntaxError'
+
+def And(rd, rs1, rs2, register):
+    try:
+        return('0000000'+register[rs2]+register[rs1]+'111'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
+
 def Lw(rd, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return 'NoBitsToStoreImmediate'
@@ -85,7 +97,35 @@ def Lw(rd, rs1, imm, register):
         return ImmToBin(imm)[-12:]+register[rs1]+'010'+register[rd]+'0000011'
     except:
         return 'RegisterNotFound'
-    
+
+def Addi(rd, rs1, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return ('NoBitsToStoreImmediate')
+    try:
+        return (ImmToBin(imm)[-12:] + register[rs1] + '000' + register[rd] + '0010011')  #using only the last 12 LSBs
+    except:
+        if rd or rs1 not in register:
+            return ('RegisterNotFound')
+        return ('Error, Somewhere')
+
+def Sltiu(rd, rs, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'ImmediateOutOfRange'
+    try:
+        return ImmToBin(imm)[-12:]+register[rs]+'011'+register[rd]+'0010011'
+    except:
+        return 'SyntaxError'
+
+def Jalr(rd, rs1, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        if rs1=='x6';
+            return(ImmtoBin(imm)[-12:]+register['t1']+'000'+register[rd]+'1100111')
+        else:
+            return(ImmtoBin(imm)[-12:]+register[rs1]+'000'+register[rd]+'1100111')
+    except:
+        return('SyntaxError')
 
 def Sw(rs2, rs1, imm, register):
     if imm >= 2**11 or imm < -2**11:
@@ -104,29 +144,6 @@ def Beq(rs1, rs2, imm, register):
     except:
         return 'SyntaxError'
 
-
-def Bge(rs1, rs2, imm, register):
-    if imm >= 2**11 or imm < -2**11:
-        return 'NoBitsToStoreImmediate'
-    try:
-        return ImmToBin(imm)[-12:-10]+register[rs2]+register[rs1]+'101'+ImmToBin(imm)[-5:]+ImmToBin(imm)[-1]+'1100011'
-    except:
-        return 'SyntaxError'
-     
-def Or(rd, rs1, rs2, register):
-    try:
-        return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
-    except:
-        return 'SyntaxError'
-
-def Sltiu(rd, rs, imm, register):
-    if imm >= 2**11 or imm < -2**11:
-        return 'ImmediateOutOfRange'
-    try:
-        return ImmToBin(imm)[-12:]+register[rs]+'011'+register[rd]+'0010011'
-    except:
-        return 'SyntaxError'
-
 def Bne(rs1, rs2, imm, register):
     if imm >= 2**12 or imm < -2**12:
         return 'ImmediateOutOfRange'
@@ -135,25 +152,14 @@ def Bne(rs1, rs2, imm, register):
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'001'+s[-5:-1]+s[-12]+'1100011'
     except:
         return 'SyntaxError'
-    
-def Bltu(rs1, rs2, imm, register):
-    if imm >= 2**12 or imm < -2**12:
-        return 'ImmediateOutOfRange'
+
+def Bge(rs1, rs2, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'NoBitsToStoreImmediate'
     try:
-        s = ImmToBin(imm)
-        return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
+        return ImmToBin(imm)[-12:-10]+register[rs2]+register[rs1]+'101'+ImmToBin(imm)[-5:]+ImmToBin(imm)[-1]+'1100011'
     except:
         return 'SyntaxError'
-
-def Addi(rd, rs1, imm, register):
-    if imm >= 2**11 or imm < -2**11:
-        return ('NoBitsToStoreImmediate')
-    try:
-        return (ImmToBin(imm)[-12:] + register[rs1] + '000' + register[rd] + '0010011')  #using only the last 12 LSBs
-    except:
-        if rd or rs1 not in register:
-            return ('RegisterNotFound')
-        return ('Error, Somewhere')
 
 def Bgeu(rs1, rs2, imm, register):
     if imm >= 2**11 or imm < -2**11:
@@ -165,6 +171,23 @@ def Bgeu(rs1, rs2, imm, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
+def Blt(rs1, rs2, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        return(ImmtoBin(imm)[-13]+ImmtoBin(imm)[-11:-5]+register[rs2]+register[rs1]+'100'+ImmtoBin(imm)[-5:-1]+ImmtoBin(imm)[-12]+'1100011')
+    except:
+        return('SyntaxError')
+
+def Bltu(rs1, rs2, imm, register):
+    if imm >= 2**12 or imm < -2**12:
+        return 'ImmediateOutOfRange'
+    try:
+        s = ImmToBin(imm)
+        return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
+    except:
+        return 'SyntaxError'
+
 def Auipc(rd, imm, register):
     if imm >= 2**19 or imm < -2**19:
         return ('NoBitsToStoreImmediate')
@@ -175,6 +198,14 @@ def Auipc(rd, imm, register):
             return ('RegisterNotFound')
         return ('Error, Somewhere')
 
+def Lui(rd, imm, register):
+    if imm >= 2**31 or imm < -2**31:
+        return 'NoBitsToStoreImmediate'
+    try:
+        return(ImmtoBin(imm)[-32:-12]+register[rd]+'0110111')
+    except:
+        return('SyntaxError')
+
 def Jal(rd, imm, register):
     if imm >= 2**11 or imm < -2**11:
         return ('NoBitsToStoreImmediate')
@@ -184,39 +215,6 @@ def Jal(rd, imm, register):
         if rd not in register:
             return ('RegisterNotFound')
         return ('Error, Somewhere')
-        
-def And(rd, rs1, rs2, register):
-    try:
-        return('0000000'+register[rs2]+register[rs1]+'111'+register[rd]+'0110011')
-    except:
-        return('SyntaxError')
-
-def Jalr(rd, rs1, imm, register):
-    if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
-    try:
-        if rs1=='x6';
-            return(ImmtoBin(imm)[-12:]+register['t1']+'000'+register[rd]+'1100111')
-        else:
-            return(ImmtoBin(imm)[-12:]+register[rs1]+'000'+register[rd]+'1100111')
-    except:
-        return('SyntaxError')
-        
-def Blt(rs1, rs2, imm, register):
-    if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
-    try:
-        return(ImmtoBin(imm)[-13]+ImmtoBin(imm)[-11:-5]+register[rs2]+register[rs1]+'100'+ImmtoBin(imm)[-5:-1]+ImmtoBin(imm)[-12]+'1100011')
-    except:
-        return('SyntaxError')
-        
-def Lui(rd, imm, register):
-    if imm >= 2**31 or imm < -2**31:
-        return 'NoBitsToStoreImmediate'
-    try:
-        return(ImmtoBin(imm)[-32:-12]+register[rd]+'0110111')
-    except:
-        return('SyntaxError')
 
 
 def Instruction_Check(register, inst, rs1, rs2, rd=None):
