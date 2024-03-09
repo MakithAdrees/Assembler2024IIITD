@@ -75,3 +75,47 @@ def Bge(rs1, rs2, imm, register):
     except:
         return 'SyntaxError'
     
+
+def Add(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
+    except:
+        return 'SyntaxError'
+    
+def Stlu(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
+    except:
+         return 'SyntaxError'
+     
+def Or(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
+    except:
+        return 'SyntaxError'
+
+def Sltiu(rd, rs, imm, register):
+    if imm >= 2**11 or imm < -2**11:
+        return 'ImmediateOutOfRange'
+    try:
+        return ImmToBin(imm)[-12:]+register[rs]+'011'+register[rd]+'0010011'
+    except:
+        return 'SyntaxError'
+
+def Bne(rs1, rs2, imm, register):
+    if imm >= 2**12 or imm < -2**12:
+        return 'ImmediateOutOfRange'
+    try:
+        s = ImmToBin(imm)
+        return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'001'+s[-5:-1]+s[-12]+'1100011'
+    except:
+        return 'SyntaxError'
+    
+def Bltu(rs1, rs2, imm, register):
+    if imm >= 2**12 or imm < -2**12:
+        return 'ImmediateOutOfRange'
+    try:
+        s = ImmToBin(imm)
+        return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
+    except:
+        return 'SyntaxError'
