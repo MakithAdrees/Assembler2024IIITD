@@ -26,12 +26,23 @@ def ImmToBin(imm):
         return binimm
 
 
-def Sub2Complement(rd, rs, register):
-    try:
-        return '0100000'+register['zero']+register[rs]+'000'+register[rd]+'0110011'
-    except:
-        return 'RegisterNotFound'
+# def Sub2Complement(rd, rs, register):
+#     try:
+#         return '0100000'+register['zero']+register[rs]+'000'+register[rd]+'0110011'
+#     except:
+#         return 'RegisterNotFound'
 
+def Add(rd, rs1, rs2, register):
+    try:
+        return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
+    except:
+        return 'SyntaxError'
+
+def Sub(rd, rs1, rs2, register):
+    try:
+        return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
+    except:
+        return('SyntaxError')
 
 def Sll(rd, rs1, rs2, register):
     try:
@@ -72,13 +83,6 @@ def Bge(rs1, rs2, imm, register):
         return 'NoBitsToStoreImmediate'
     try:
         return ImmToBin(imm)[-12:-10]+register[rs2]+register[rs1]+'101'+ImmToBin(imm)[-5:]+ImmToBin(imm)[-1]+'1100011'
-    except:
-        return 'SyntaxError'
-    
-
-def Add(rd, rs1, rs2, register):
-    try:
-        return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
     except:
         return 'SyntaxError'
     
@@ -174,11 +178,6 @@ def jal(rd, imm, register):
         if rd not in register:
             return ('RegisterNotFound')
         return ('Error, Somewhere')
-def Sub(rd, rs1, rs2, register):
-    try:
-        return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
-    except:
-        return('SyntaxError')
         
 def Xor(rd, rs1, rs2, register):
     try:
