@@ -68,8 +68,6 @@ def main(lines, register):
     labels = label(lines)
     
     for a in range(len(lines)):
-        if len(lines[a]) == 0 :
-            continue
         if len(lines[a]) > 2:
             print('InvalidInstruction at line', a+1)
 
@@ -83,13 +81,9 @@ def main(lines, register):
                     if reg[2] in register:
                         ff(instruction, reg[0], reg[1], reg[2])
                     elif reg[2] in labels:
-                        min = labels[reg[2]][0]
-                    
-                        for b in labels[reg[2]]:
-                            if abs(b-a) < abs(min-a):
-                                min = b
+                        minn = LabelToImm(labels, a, reg[2])
                         
-                        ff(instruction, reg[0], reg[1], 4*(a-min))
+                        ff(instruction, reg[0], reg[1], 4*(a-minn))
                     
                     else:
                         ff(instruction, reg[0], reg[1], 'invalid')
@@ -110,13 +104,9 @@ def main(lines, register):
                     if reg[1] in register:
                         ff(instruction, reg[0], reg[1])
                     elif reg[1] in labels:
-                        min = labels[reg[1]][0]
-                    
-                        for b in labels[reg[1]]:
-                            if abs(b-a) < abs(min-a):
-                                min = b
+                        minn = LabelToImm(labels, a, reg[1])
                         
-                        ff(instruction, reg[0], 4*(a-min))
+                        ff(instruction, reg[0], 4*(a-minn))
                     
                     else:
                         ff(instruction, reg[0], 'invalid')
