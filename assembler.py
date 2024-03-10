@@ -55,8 +55,8 @@ def label(lines):
 def main(lines, register):
     # print(lines)
     for a in range(len(lines)):
-        if len(lines[a]) > 3:
-            print('InvalidInstruction in line', a+1)
+        # if len(lines[a]) > 3:
+        #     print('InvalidInstruction in line', a+1)
 
         if len(lines[a]) == 2 and lines[a][0][-1] == ':':
             print('InvalidInstruction in line', a+1)
