@@ -35,8 +35,8 @@ def Add(rd, rs1, rs2, register , line_no):
         return '0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011'
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
     
 def Sub(rd, rs1, rs2, register , line_no):
     try:
@@ -46,113 +46,113 @@ def Sub(rd, rs1, rs2, register , line_no):
             return('0100000'+register[rs2]+register[rs1]+'000'+register[rd]+'0110011')
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Slt(rd, rs1, rs2, register , line_no):
     try:
         return ('0000000' + register[rs2] + register[rs1] + '010' + register[rd] + '0110011')
     except:
         if rd or rs1 or rs2 not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Sltu(rd, rs1, rs2, register , line_no):
     try:
         return '0000000'+register[rs2]+register[rs1]+'011'+register[rd]+'0110011'
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Xor(rd, rs1, rs2, register , line_no):
     try:
         return('0000000'+register[rs2]+register[rs1]+'100'+register[rd]+'0110011')
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Sll(rd, rs1, rs2, register , line_no):
     try:
         return '0000000'+register[rs2]+register[rs1]+'001'+register[rd]+'0110011'
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
     
 def Srl(rd, rs1, rs2, register , line_no):
     try:
         return ('0000000' + register[rs2] + register[rs1] + '101' + register[rd] + '0110011')
     except:
         if rd or rs1 or rs2 not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Or(rd, rs1, rs2, register , line_no):
     try:
         return '0000000'+register[rs2]+register[rs1]+'110'+register[rd]+'0110011'
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def And(rd, rs1, rs2, register , line_no):
     try:
         return('0000000'+register[rs2]+register[rs1]+'111'+register[rd]+'0110011')
     except:
         if rs1 or rs2 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 # I type instructions______________________________________________________________________________________
 
 def Lw(rd, rs1, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return ImmToBin(imm)[-12:]+register[rs1]+'010'+register[rd]+'0000011'
     except:
         if rs1 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Addi(rd, rs1, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     
     try:
         return (ImmToBin(imm)[-12:] + register[rs1] + '000' + register[rd] + '0010011')  #using only the last 12 LSBs
     except:
         if rd or rs1 not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Sltiu(rd, rs1, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found at ' + str(line_no)
     try:
         return ImmToBin(imm)[-12:]+register[rs1]+'011'+register[rd]+'0010011'
     except:
         if rs1 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Jalr(rd, rs1, imm, register , line_no):
     try:
         if imm >= 2**31 or imm < -2**31:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         if rs1=='x6':
             return(ImmToBin(imm)[-12:]+register['t1']+'000'+register[rd]+'1100111')
@@ -160,136 +160,136 @@ def Jalr(rd, rs1, imm, register , line_no):
             return(ImmToBin(imm)[-12:]+register[rs1]+'000'+register[rd]+'1100111')
     except:
         if rs1 or rd not in register:
-            return('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 # S type instructions______________________________________________________________________________________
 
 def Sw(rs2, rs1, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return ImmToBin(imm)[-12:-5]+register[rs2]+register[rs1]+'010'+ImmToBin(imm)[-5:]+'0100011'
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 # B type instructions______________________________________________________________________________________
 
 def Beq(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'000'+s[-5:-1]+s[-12]+'1100011'
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 def Bne(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'001'+s[-5:-1]+s[-12]+'1100011'
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 def Bge(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'101'+s[-5:-1]+s[-12]+'1100011'
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 def Bgeu(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**11 or imm < -2**11:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return (ImmToBin(imm)[-13] + ImmToBin(imm)[-11:-5] + register[rs2] + register[rs1] + '111' + ImmToBin(imm)[-4:0] + ImmToBin(imm)[-11] + '1100011')
     except:
         if rs1 or rs2 not in register:
-            return ('RegisterNotFound   at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return ('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Blt(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**31 or imm < -2**31:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return(ImmToBin(imm)[-13]+ImmToBin(imm)[-11:-5]+register[rs2]+register[rs1]+'100'+ImmToBin(imm)[-5:-1]+ImmToBin(imm)[-12]+'1100011')
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 def Bltu(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         s = ImmToBin(imm)
         return s[-13]+s[-11:-5]+register[rs2]+register[rs1]+'110'+s[-5:-1]+s[-12]+'1100011'
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 # U type instructions______________________________________________________________________________________
 
 def Auipc(rd, imm, register , line_no):
     try:
         if imm >= 2**19 or imm < -2**19:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return (ImmToBin(imm)[-32:-12] + register[rd] + '0010111')
     except:
         if rd not in register:
-            return ('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return ('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 def Lui(rd, imm, register , line_no):
     try:
         if imm >= 2**31 or imm < -2**31:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return(ImmToBin(imm)[-32:-12]+register[rd]+'0110111')
     except:
-        return 'SyntaxError at ' + str(line_no)
+        return 'SyntaxError in line ' + str(line_no)
 
 # J type instructions______________________________________________________________________________________
 
 def Jal(rd, imm, register , line_no):
     try:
         if imm >= 2**21 or imm < -2**21:
-            return ('Error, ImmediateOutOfRange' + str(line_no))
+            return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return (ImmToBin(imm)[-21]+ImmToBin(imm)[-11:-1]+ImmToBin(imm)[-12]+ImmToBin(imm)[-20:-12]+register[rd]+'1101111')
     except:
         if rd not in register:
-            return ('RegisterNotFound at ' + str(line_no))
-        return 'SyntaxError at ' + str(line_no)
+            return ('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
 
 # Function that checks which instruction is called and then calls that function
 
@@ -343,4 +343,4 @@ def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None , line_no = None):
         return Auipc(rd,rs1,register,line_no)
     elif inst =="jal":
         return Jal(rd,rs1,register,line_no)
-    return('IncorrectInstruction at ' + str(line_no))
+    return('IncorrectInstruction in line ' + str(line_no))
