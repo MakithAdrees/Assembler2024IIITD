@@ -1,10 +1,9 @@
 import os
 import argparse
-from instructions import Instruction_Check as ff
+from instructions import Instruction_Check as ff     #here, we are importing the function, which includes all the instructions as ff
 #Format $python3 Assembler.py input_assembly_code_file_path output_machine_code_file_path
 register = {'zero':'00000','ra':'00001','sp':'00010','gp':'00011','tp':'00100','t0':'00101','t1':'00110','t2':'00111','s0':'01000','fp':'01000','s1':'01001','a0':'01010','a1':'01011','a2':'01100','a3':'01101','a4':'01110','a5':'01111','a6':'10000','a7':'10001','s2':'10010','s3':'10011','s4':'10100','s5':'10101','s6':'10110','s7':'10111','s8':'11000','s9':'11001','s10':'11010','s11':'11011','t3':'11100','t4':'11101','t5':'11110','t6':'11111'}
 output = []
-
 
 # function to import file(data) from the txt file
 def import_file(file_path):
@@ -17,6 +16,7 @@ def import_file(file_path):
         print('File not found')
         exit()
 
+#function to export the binary converted data to a txt file
 def export_file(file_path, lines):
     with open(file_path, 'w') as file:
         for a in lines:
@@ -29,7 +29,7 @@ args = parser.parse_args()
 
 lines = import_file(args.input)
 
-# function for splitting the instruction and rest of the part
+# function for splitting the labels, instruction, registers and the rest of the part
 for a in range(len(lines)):
     lines[a] = lines[a].split(' ')
 
@@ -39,9 +39,10 @@ def LabelToImm(labels, a, label):
     for i in lst:
         if abs(i-a) < abs(minn-a):
             minn = i
-    return  (minn)
+    return  (Minn)
 
 
+#function if there is a label in the line, the function stores the label in a dict....
 def label(lines):
     labels = {}
     for a in range(len(lines)):
@@ -55,23 +56,22 @@ def label(lines):
             lines[a] = lines[a][1:]
     return labels
 
-
-
+#This is the main program that checks for the number of registers, labels, instructions and more
+# The function checks for errors too
 def main(lines, register):
     for a in range(len(lines)):
         if len(lines[a]) == 1 :
             continue
-        if len(lines[a]) > 3:
+        if len(lines[a]) > 3:                             #if there are more than 2 spaces in the instruction line(string) then print error
             print('InvalidInstruction in line', a+1)
         try:
-            if len(lines[a]) == 2 and lines[a][0][-1] == ':':
+            if len(lines[a]) == 2 and lines[a][0][-1] == ':':          #if there is only 1 space in the string but the first element is a label then it prints error as the format is incorrect
                 print('InvalidInstruction in line', a+1)
         except:
             continue
 
-
         if len(lines[a]) == 1:
-            print('InvalidInstruction in line', a+1)
+            print('InvalidInstruction in line', a+1)     
 
     
     labels = label(lines)
