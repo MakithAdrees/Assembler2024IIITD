@@ -4,4 +4,4 @@ def LabelToImm(labels, a, label):
     for i in lst:
         if abs(i-a) < abs(minn-a):
             minn = i
-    return minn
+    return -minn
