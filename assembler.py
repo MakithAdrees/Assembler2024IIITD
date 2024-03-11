@@ -62,7 +62,7 @@ def main(lines, register):
     for a in range(len(lines)):
         if len(lines[a]) == 1 :
             continue
-        if len(lines[a]) > 3:                             #if there are more than 2 spaces in the instruction line(string) then print error
+        if len(lines[a]) > 3:                                          #if there are more than 2 spaces in the instruction line(string) then print error
             print('InvalidInstruction in line', a+1)
         try:
             if len(lines[a]) == 2 and lines[a][0][-1] == ':':          #if there is only 1 space in the string but the first element is a label then it prints error as the format is incorrect
@@ -70,10 +70,9 @@ def main(lines, register):
         except:
             continue
 
-        if len(lines[a]) == 1:
+        if len(lines[a]) == 1:                                         #if there are no spaces in the string then it prints error as the format is incorrect
             print('InvalidInstruction in line', a+1)     
 
-    
     labels = label(lines)
     
     for a in range(len(lines)):
@@ -83,26 +82,25 @@ def main(lines, register):
         #     print('InvalidInstruction in line', a+1)
 
         try:
-            if lines[a][0][-1] != ':':
+            if lines[a][0][-1] != ':':                                  
                 instruction = lines[a][0]
-                if lines[a][1].count(',') >2:
+                if lines[a][1].count(',') >2:                           #prints error is number of commas are greater than 2
                     output.append(f'InvalidInstruction in line {a+1}')
-                if lines[a][1].count(',') == 0:
+                if lines[a][1].count(',') == 0:                         #prints error if there are no commas in the string
                     output.append(f'InvalidArguments in line {a+1}')
-                if lines[a][1].count(',') == 2:
+                if lines[a][1].count(',') == 2:                         #checks if there are 2 or 1 commas
                     reg = lines[a][1].split(',')
                     try:
-                        output.append(ff(instruction, reg[0], reg[1], int(reg[2]) , line_no = a+1))
+                        output.append(ff(instruction, reg[0], reg[1], int(reg[2]) , line_no = a+1))           #it executes when there are 2 registers and one immediate value
                     except:   
                         if reg[2] in register:
-                            output.append(ff(instruction, reg[0], reg[1], reg[2] , line_no = a+1))
+                            output.append(ff(instruction, reg[0], reg[1], reg[2] , line_no = a+1))            #it executes when all 3 are registers
                         elif reg[2] in labels:
                             minn = LabelToImm(labels, a, reg[2])
-                            output.append(ff(instruction, reg[0], reg[1], 4*(minn-a) , line_no = a+1))
+                            output.append(ff(instruction, reg[0], reg[1], 4*(minn-a) , line_no = a+1))        #it executes when there are 2 registers and one label
                         else:
-                            output.append(ff(instruction, reg[0], reg[1], 'invalid' , line_no = a+1))
+                            output.append(ff(instruction, reg[0], reg[1], 'invalid' , line_no = a+1))         #it executes when the 3rd register is none of the above
 
-                
                 elif '(' in lines[a][1] and ')' in lines[a][1]:
                     reg = lines[a][1].split(',')
                     reg2 = reg[1].split('(')
@@ -111,17 +109,17 @@ def main(lines, register):
                     except:
                         output.append(ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateVal' , line_no = a+1))
                 
-                elif lines[a][1].count(',') == 1:
+                elif lines[a][1].count(',') == 1:                                                            #it executes when there is only one comma in the string
                     reg = lines[a][1].split(',')
                     try:
-                        output.append(ff(instruction, reg[0], int(reg[1]) , line_no = a+1))
+                        output.append(ff(instruction, reg[0], int(reg[1]) , line_no = a+1))                  #it executes when one is reg and second is imm
                     except:    
                         if reg[1] in register:
-                            output.append(ff(instruction, reg[0], reg[1] , line_no = a+1))
+                            output.append(ff(instruction, reg[0], reg[1] , line_no = a+1))                   #it executes when both are registers
                         elif reg[1] in labels:
                             minn = LabelToImm(labels, a, reg[1])
                             
-                            output.append(ff(instruction, reg[0], 4*(minn-a) , line_no = a+1))
+                            output.append(ff(instruction, reg[0], 4*(minn-a) , line_no = a+1))               #it executes when one is reg and second is a label
                         
                         else:
                             output.append(ff(instruction, reg[0], 'invalid' , line_no = a+1))
@@ -145,7 +143,7 @@ if output == []:
         file.write('')
     exit()
 
-elif output[-1] != '00000000000000000000000001100011' and '00000000000000000000000001100011' not in output:
+elif output[-1] != '00000000000000000000000001100011' and '00000000000000000000000001100011' not in output:        #it checks if the virtual halt is present in output or not
     print('No VirtualHalt instruction found')
     print()
     print('Errors in the code')
@@ -155,7 +153,7 @@ elif output[-1] != '00000000000000000000000001100011' and '000000000000000000000
         file.write('')
     exit()
     
-elif output[-1] != '00000000000000000000000001100011':
+elif output[-1] != '00000000000000000000000001100011':              #it checks if virtual halt is present in last line or not
     print('VirtualHalt instruction not at code end')
     print()
     print('Errors in the code')
@@ -175,4 +173,4 @@ else:
                 file.write(a+'\n')
         if len(output[-1]) == 32:
             file.write(output[-1])
-    print(f"Pogram ran Successfully and output is stored in {args.output} file") 
+    print(f"Pogram ran Successfully and output is stored in {args.output} file")            #it executes when the programs executes without any error and the output is stored successfully in the txt file
