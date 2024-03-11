@@ -146,7 +146,6 @@ if output == []:
     exit()
 
 elif output[-1] != '00000000000000000000000001100011' and '00000000000000000000000001100011' not in output:
-    errors.append('No VirtualHalt instruction found')
     print('No VirtualHalt instruction found')
     print()
     print('Errors in the code')
@@ -157,22 +156,16 @@ elif output[-1] != '00000000000000000000000001100011' and '000000000000000000000
     exit()
     
 elif output[-1] != '00000000000000000000000001100011':
-    errors.append('VirtualHalt instruction not at code end')
     print('VirtualHalt instruction not at code end')
     print()
     print('Errors in the code')
     print()
-    with open(args.output, 'w') as file:
-        file.write('')
-    exit()
+
         
 if len(errors) > 0:
     
     print('Errors in the code')
     print()
-    with open(args.output, 'w') as file:
-        file.write('')
-    exit()
     
 else:
     
