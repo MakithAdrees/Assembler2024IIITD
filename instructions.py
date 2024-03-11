@@ -193,7 +193,7 @@ def Beq(rs1, rs2, imm, register , line_no):
 def Bne(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('ImmediateOutOfRange in line ' + str(line_no))
+            return ('InvalideImmediate in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
     try:
@@ -205,7 +205,7 @@ def Bne(rs1, rs2, imm, register , line_no):
 def Bge(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('ImmediateOutOfRange in line ' + str(line_no))
+            return ('InvalideImmediate in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
     try:
@@ -217,7 +217,7 @@ def Bge(rs1, rs2, imm, register , line_no):
 def Bgeu(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('ImmediateOutOfRange in line ' + str(line_no))
+            return ('InvalideImmediate in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
     try:
@@ -230,7 +230,7 @@ def Bgeu(rs1, rs2, imm, register , line_no):
 def Blt(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('ImmediateOutOfRange in line ' + str(line_no))
+            return ('InvalideImmediate in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
     try:
@@ -241,7 +241,7 @@ def Blt(rs1, rs2, imm, register , line_no):
 def Bltu(rs1, rs2, imm, register , line_no):
     try:
         if imm >= 2**12 or imm < -2**12:
-            return ('ImmediateOutOfRange in line ' + str(line_no))
+            return ('InvalideImmediate in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
     try:
@@ -254,7 +254,7 @@ def Bltu(rs1, rs2, imm, register , line_no):
 
 def Auipc(rd, imm, register , line_no):
     try:
-        if imm >= 2**19 or imm < -2**19:
+        if imm >= 2**31 or imm < -2**31:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
@@ -280,7 +280,7 @@ def Lui(rd, imm, register , line_no):
 
 def Jal(rd, imm, register , line_no):
     try:
-        if imm >= 2**21 or imm < -2**21:
+        if imm >= 2**20 or imm < -2**20:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
