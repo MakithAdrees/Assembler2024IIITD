@@ -82,52 +82,52 @@ def main(lines, register):
         # if len(lines[a]) > 2:
         #     print('InvalidInstruction in line', a+1)
 
-        # try:
-        if lines[a][0][-1] != ':':
-            instruction = lines[a][0]
-            if lines[a][1].count(',') >2:
-                output.append(f'InvalidInstruction in line {a+1}')
-            if lines[a][1].count(',') == 0:
-                output.append(f'InvalidArguments in line {a+1}')
-            if lines[a][1].count(',') == 2:
-                reg = lines[a][1].split(',')
-                try:
-                    output.append(ff(instruction, reg[0], reg[1], int(eval(reg[2])) , line_no = a+1))
-                except:   
-                    if reg[2] in register:
-                        output.append(ff(instruction, reg[0], reg[1], reg[2] , line_no = a+1))
-                    elif reg[2] in labels:
-                        minn = LabelToImm(labels, a, reg[2])
-                        output.append(ff(instruction, reg[0], reg[1], 4*(minn-a) , line_no = a+1))
-                    else:
-                        output.append(ff(instruction, reg[0], reg[1], 'invalid' , line_no = a+1))
+        try:
+            if lines[a][0][-1] != ':':
+                instruction = lines[a][0]
+                if lines[a][1].count(',') >2:
+                    output.append(f'InvalidInstruction in line {a+1}')
+                if lines[a][1].count(',') == 0:
+                    output.append(f'InvalidArguments in line {a+1}')
+                if lines[a][1].count(',') == 2:
+                    reg = lines[a][1].split(',')
+                    try:
+                        output.append(ff(instruction, reg[0], reg[1], int(eval(reg[2])) , line_no = a+1))
+                    except:   
+                        if reg[2] in register:
+                            output.append(ff(instruction, reg[0], reg[1], reg[2] , line_no = a+1))
+                        elif reg[2] in labels:
+                            minn = LabelToImm(labels, a, reg[2])
+                            output.append(ff(instruction, reg[0], reg[1], 4*(minn-a) , line_no = a+1))
+                        else:
+                            output.append(ff(instruction, reg[0], reg[1], 'invalid' , line_no = a+1))
 
-            
-            elif '(' in lines[a][1] and ')' in lines[a][1]:
-                reg = lines[a][1].split(',')
-                reg2 = reg[1].split('(')
-                try:
-                    output.append(ff(instruction, reg[0], reg2[1][:-1], int(eval(reg2[0])) , line_no = a+1))
-                except:
-                    output.append(ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateVal' , line_no = a+1))
-            
-            elif lines[a][1].count(',') == 1:
-                reg = lines[a][1].split(',')
-                try:
-                    output.append(ff(instruction, reg[0], int(eval(reg[1])) , line_no = a+1))
-                except:    
-                    if reg[1] in register:
-                        output.append(ff(instruction, reg[0], reg[1] , line_no = a+1))
-                    elif reg[1] in labels:
-                        minn = LabelToImm(labels, a, reg[1])
+                
+                elif '(' in lines[a][1] and ')' in lines[a][1]:
+                    reg = lines[a][1].split(',')
+                    reg2 = reg[1].split('(')
+                    try:
+                        output.append(ff(instruction, reg[0], reg2[1][:-1], int(eval(reg2[0])) , line_no = a+1))
+                    except:
+                        output.append(ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateVal' , line_no = a+1))
+                
+                elif lines[a][1].count(',') == 1:
+                    reg = lines[a][1].split(',')
+                    try:
+                        output.append(ff(instruction, reg[0], int(eval(reg[1])) , line_no = a+1))
+                    except:    
+                        if reg[1] in register:
+                            output.append(ff(instruction, reg[0], reg[1] , line_no = a+1))
+                        elif reg[1] in labels:
+                            minn = LabelToImm(labels, a, reg[1])
+                            
+                            output.append(ff(instruction, reg[0], 4*(minn-a) , line_no = a+1))
                         
-                        output.append(ff(instruction, reg[0], 4*(minn-a) , line_no = a+1))
-                    
-                    else:
-                        output.append(ff(instruction, reg[0], 'invalid' , line_no = a+1))
+                        else:
+                            output.append(ff(instruction, reg[0], 'invalid' , line_no = a+1))
         
-        # except:
-        #     print('Error in line', a+1)
+        except:
+            print('Error in line', a+1)
     return output
             
 output = main(lines, register)
@@ -139,7 +139,13 @@ for a in output:
         errors.append(a)
 
 print()
-if output[-1] != '00000000000000000000000001100011' and '00000000000000000000000001100011' not in output:
+if output == []:
+    print('No instruction')
+    with open(args.output, 'w') as file:
+        file.write('')
+    exit()
+
+elif output[-1] != '00000000000000000000000001100011' and '00000000000000000000000001100011' not in output:
     errors.append('No VirtualHalt instruction found')
     print('No VirtualHalt instruction found')
     print()
@@ -171,7 +177,9 @@ if len(errors) > 0:
 else:
     
     with open(args.output, 'w') as file:
-        for a in output:
+        for a in output[:-1]:
             if len(a) == 32:
                 file.write(a+'\n')
+        if len(output[-1]) == 32:
+            file.write(output[-1])
     print(f"Pogram ran Successfully and output is stored in {args.output} file") 
