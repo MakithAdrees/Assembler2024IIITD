@@ -57,10 +57,8 @@ def label(lines):
 
 
 
-def main(lines, register , halt = False):
+def main(lines, register):
     for a in range(len(lines)):
-        if lines[a] == ["end:", "beq" ,"zero,zero,0"]:
-            halt = True
         if len(lines[a]) == 1 :
             continue
         if len(lines[a]) > 3:
@@ -124,21 +122,24 @@ def main(lines, register , halt = False):
                     
                     else:
                         output.append(ff(instruction, reg[0], 'invalid' , a))
-    return output, halt
+    return output
             
-output , halt = main(lines, register)
+output = main(lines, register)
 errors = []
 for a in output:
     if len(a) != 32 and a.isdigit() == False:
         print(a)
         errors.append(a)
 
-if halt == False:
+if output[-1] != '00000000000000000000000001100011':
+    halt = True
+    errors.append('No Halt instruction found')
     print('No Halt instruction found')
     print('Errors in the code')
     with open(args.output, 'w') as file:
         file.write('')
     exit()
+
 if len(errors) > 0:
     print('Errors in the code')
     with open(args.output, 'w') as file:
