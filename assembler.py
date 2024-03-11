@@ -39,7 +39,7 @@ def LabelToImm(labels, a, label):
     for i in lst:
         if abs(i-a) < abs(minn-a):
             minn = i
-    return  (Minn)
+    return  (minn)
 
 
 #function if there is a label in the line, the function stores the label in a dict....
