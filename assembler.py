@@ -86,11 +86,13 @@ def main(lines, register):
         if lines[a][0][-1] != ':':
             instruction = lines[a][0]
             if lines[a][1].count(',') >2:
-                print('InvalidInstruction in line', a+1)
+                output.append(f'InvalidInstruction in line {a+1}')
+            if lines[a][1].count(',') == 0:
+                output.append(f'InvalidArguments in line {a+1}')
             if lines[a][1].count(',') == 2:
                 reg = lines[a][1].split(',')
                 try:
-                    output.append(ff(instruction, reg[0], reg[1], int(reg[2]) , line_no = a+1))
+                    output.append(ff(instruction, reg[0], reg[1], int(eval(reg[2])) , line_no = a+1))
                 except:   
                     if reg[2] in register:
                         output.append(ff(instruction, reg[0], reg[1], reg[2] , line_no = a+1))
@@ -105,14 +107,14 @@ def main(lines, register):
                 reg = lines[a][1].split(',')
                 reg2 = reg[1].split('(')
                 try:
-                    output.append(ff(instruction, reg[0], reg2[1][:-1], int(reg2[0]) , line_no = a+1))
+                    output.append(ff(instruction, reg[0], reg2[1][:-1], int(eval(reg2[0])) , line_no = a+1))
                 except:
                     output.append(ff(instruction, reg[0], reg2[1][:-1], 'InvalidImmediateVal' , line_no = a+1))
             
             elif lines[a][1].count(',') == 1:
                 reg = lines[a][1].split(',')
                 try:
-                    output.append(ff(instruction, reg[0], int(reg[1]) , line_no = a+1))
+                    output.append(ff(instruction, reg[0], int(eval(reg[1])) , line_no = a+1))
                 except:    
                     if reg[1] in register:
                         output.append(ff(instruction, reg[0], reg[1] , line_no = a+1))
