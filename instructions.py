@@ -139,7 +139,7 @@ def Sltiu(rd, rs1, imm, register , line_no):
         if imm >= 2**11 or imm < -2**11:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
-        return 'Label not found at ' + str(line_no)
+        return 'Label not found in line ' + str(line_no)
     try:
         return ImmToBin(imm)[-12:]+register[rs1]+'011'+register[rd]+'0010011'
     except:
@@ -180,7 +180,7 @@ def Sw(rs2, rs1, imm, register , line_no):
 
 def Beq(rs1, rs2, imm, register , line_no):
     try:
-        if imm >= 2**11 or imm < -2**11:
+        if imm >= 2**12 or imm < -2**12:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
@@ -204,7 +204,7 @@ def Bne(rs1, rs2, imm, register , line_no):
 
 def Bge(rs1, rs2, imm, register , line_no):
     try:
-        if imm >= 2**11 or imm < -2**11:
+        if imm >= 2**12 or imm < -2**12:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
@@ -216,7 +216,7 @@ def Bge(rs1, rs2, imm, register , line_no):
 
 def Bgeu(rs1, rs2, imm, register , line_no):
     try:
-        if imm >= 2**11 or imm < -2**11:
+        if imm >= 2**12 or imm < -2**12:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
@@ -229,7 +229,7 @@ def Bgeu(rs1, rs2, imm, register , line_no):
 
 def Blt(rs1, rs2, imm, register , line_no):
     try:
-        if imm >= 2**31 or imm < -2**31:
+        if imm >= 2**12 or imm < -2**12:
             return ('ImmediateOutOfRange in line ' + str(line_no))
     except:
         return 'Label not found in line ' + str(line_no)
