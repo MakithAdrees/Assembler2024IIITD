@@ -16,7 +16,7 @@ def BinToDec(binary):
 
 # I type instructions_______________________________________________________________
 
-def addi(code, registers):
+def addi(code, registers):     #unchecked________________________________________
     reg = registers[code[-20:-15]]        #finding registers
     imm = BinToDec(code[:12])                       #finding immediate
     sum = imm+reg         #finding new rd
@@ -29,15 +29,15 @@ def lw(code, registers):
     #will do it on 3 april
     print("lw")
     
-def sltiu(code, registers):
-    reg = BinToDec(code[-20:-15])        #finding registers
+def sltiu(code, registers):               #unchecked________________________________________
+    reg = BinToDec(code[-20:-15])       
     imm = code[:12]
     if imm > reg:
         registers[code[-12:-7]] = 1
     return registers
     # print("sltiu")
     
-def jalr(code, registers):
+def jalr(code, registers):           #unchecked________________________________________
     reg = registers["00101"]
     pc = registers["PC"]
     imm = BinToDec(code[:12])
@@ -47,7 +47,7 @@ def jalr(code, registers):
     # print("jalr")
     
 def I_Type(code, registers):
-    iType = ["000","010","011","addi(code, registers)","jalr(code, registers)","lw(code, registers)","sltiu(code, registers)"]
+    iType = ["000","010","011","addi(code, registers)","jalr(code, registers)","lw(code, registers)","sltiu(code, registers)"]     #unchecked________________________________________
     s = iType.index(code[-15:-12])
     iterate = 4
     if code[-7:] == "0010011":
@@ -56,7 +56,7 @@ def I_Type(code, registers):
 
 # B type instructions_______________________________________________________________
 
-def Beq(code, registers):
+def Beq(code, registers):                      #unchecked________________________________________
     rs1 = BinToDec(code[:7])
     rs2 = BinToDec(code[-12:-7])
     imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
@@ -84,7 +84,7 @@ def B_Type(code, registers):
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
-# U type instructions_______________________________________________________________
+# S type instructions_______________________________________________________________
 
 
 
