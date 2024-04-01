@@ -30,7 +30,7 @@ def lw(code, registers):
     print("lw")
     
 def sltiu(code, registers):
-    reg = UBinToDec(code[-20:-15])        #finding registers
+    reg = BinToDec(code[-20:-15])        #finding registers
     imm = code[:12]
     if imm > reg:
         registers[code[-12:-7]] = 1
@@ -56,8 +56,12 @@ def I_Type(code, registers):
 
 # B type instructions_______________________________________________________________
 
-# def Beq(code, registers):
-#     # code
+def Beq(code, registers):
+    rs1 = BinToDec(code[:7])
+    rs2 = BinToDec(code[-12:-7])
+    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if rs1 == rs2:
+        registers["PC"] = registers["PC"] + imm
 
 # def Bne(code, registers):
 #     # code
@@ -76,7 +80,7 @@ def I_Type(code, registers):
 
 def B_Type(code, registers):
     iType = ["000","001","100","101","110","111"]
-    iInst = ['Beq','Bne','Blt','Bge','Bltu','Bgeu']
+    iInst = ['Beq(code, registers)','Bne(code, registers)','Blt(code, registers)','Bge(code, registers)','Bltu(code, registers)','Bgeu(code, registers)']
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
