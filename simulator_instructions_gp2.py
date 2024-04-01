@@ -56,7 +56,7 @@ I_Type('1111111110010111 000 000 1100111',{})
 
 def B_Type(code, registers):
     iType = ["000","001","100","101","110","111"]
-    iInst = ['Beq','Bne','Blt','Bge','Bltu','Bgeu']
+    iInst = ['Beq(code, registers)','Bne(code, registers)','Blt(code, registers)','Bge(code, registers)','Bltu(code, registers)','Bgeu(code, registers)']
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
