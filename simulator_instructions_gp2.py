@@ -16,11 +16,11 @@ def BinToDec(binary):
 
 # I type instructions_______________________________________________________________
 
-def addi(code, registers):     #unchecked________________________________________
-    reg = registers[code[-20:-15]]        #finding registers
+def addi(code, registers): #unchecked
+    reg = registers[code[-20:-15]]                  #finding registers
     imm = BinToDec(code[:12])                       #finding immediate
-    sum = imm+reg         #finding new rd
-    registers[code[-12:-7]] = sum         #rd updated
+    sum = imm+reg                                   #finding new rd
+    registers[code[-12:-7]] = sum                   #rd updated
     return registers
     # print("addi")
 
@@ -29,15 +29,15 @@ def lw(code, registers):
     #will do it on 3 april
     print("lw")
     
-def sltiu(code, registers):               #unchecked________________________________________
-    reg = BinToDec(code[-20:-15])       
+def sltiu(code, registers): #unchecked
+    reg = BinToDec(code[-20:-15])        #finding registers
     imm = code[:12]
     if imm > reg:
         registers[code[-12:-7]] = 1
     return registers
     # print("sltiu")
     
-def jalr(code, registers):           #unchecked________________________________________
+def jalr(code, registers): #unchecked
     reg = registers["00101"]
     pc = registers["PC"]
     imm = BinToDec(code[:12])
@@ -47,7 +47,7 @@ def jalr(code, registers):           #unchecked_________________________________
     # print("jalr")
     
 def I_Type(code, registers):
-    iType = ["000","010","011","addi(code, registers)","jalr(code, registers)","lw(code, registers)","sltiu(code, registers)"]     #unchecked________________________________________
+    iType = ["000","010","011","addi(code, registers)","jalr(code, registers)","lw(code, registers)","sltiu(code, registers)"]
     s = iType.index(code[-15:-12])
     iterate = 4
     if code[-7:] == "0010011":
@@ -56,18 +56,29 @@ def I_Type(code, registers):
 
 # B type instructions_______________________________________________________________
 
-def Beq(code, registers):                      #unchecked________________________________________
+def Beq(code, registers): #unchecked
     rs1 = BinToDec(code[:7])
     rs2 = BinToDec(code[-12:-7])
     imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
     if rs1 == rs2:
         registers["PC"] = registers["PC"] + imm
+        return registers
 
-# def Bne(code, registers):
-#     # code
+def Bne(code, registers): #unchecked
+    rs1 = BinToDec(code[:7])
+    rs2 = BinToDec(code[-12:-7])
+    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if rs1 != rs2:
+        registers["PC"] = registers["PC"] + imm
+        return registers
 
-# def Bge(code, registers):
-#     # code
+def Bge(code, registers): #unchecked
+    rs1 = BinToDec(code[:7])
+    rs2 = BinToDec(code[-12:-7])
+    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if rs1 >= rs2:
+        registers["PC"] = registers["PC"] + imm
+        return registers
 
 # def Bgeu(code, registers):
 #     # code
@@ -84,12 +95,24 @@ def B_Type(code, registers):
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
-# S type instructions_______________________________________________________________
+# U type instructions_______________________________________________________________
 
 
 
 # J type instructions_______________________________________________________________
+    
+def Jal(code, registers): #unchecked
+    imm = BinToDec(code[0] + code[12:21] + code[11] + code[1:11] + '0')
+    registers[code[-12:-7]] = registers["PC"] + 4
+    registers["PC"] = registers["PC"] + imm
+    return registers
+
+def J_Type(code, registers):
+    Jal(code, registers)
 
 
-I_Type('1111111110010111 000 000 1100111',{})
+
+J_Type('1111111110010111 000 000 1100111',{})
 B_Type('1111111110010111 000 000 1100111',{})
+# U_Type('1111111110010111 000 000 1100111',{})
+J_Type('1111111110010111 000 000 1100111',{})
