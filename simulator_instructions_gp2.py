@@ -14,6 +14,8 @@ def BinToDec(binary):
     decimal = "0000"
     return decimal
 
+# I type instructions_______________________________________________________________
+
 def addi(code, registers):
     reg = registers[code[-20:-15]]        #finding registers
     imm = BinToDec(code[:12])                       #finding immediate
@@ -52,12 +54,38 @@ def I_Type(code, registers):
         iterate = 3
     eval(iType[s+iterate])
 
-I_Type('1111111110010111 000 000 1100111',{})
+# B type instructions_______________________________________________________________
+
+# def Beq(code, registers):
+#     # code
+
+# def Bne(code, registers):
+#     # code
+
+# def Bge(code, registers):
+#     # code
+
+# def Bgeu(code, registers):
+#     # code
+
+# def Blt(code, registers):
+#     # code
+
+# def Bltu(code, registers):
+#     # code
 
 def B_Type(code, registers):
     iType = ["000","001","100","101","110","111"]
-    iInst = ['Beq(code, registers)','Bne(code, registers)','Blt(code, registers)','Bge(code, registers)','Bltu(code, registers)','Bgeu(code, registers)']
+    iInst = ['Beq','Bne','Blt','Bge','Bltu','Bgeu']
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
+# U type instructions_______________________________________________________________
+
+
+
+# J type instructions_______________________________________________________________
+
+
+I_Type('1111111110010111 000 000 1100111',{})
 B_Type('1111111110010111 000 000 1100111',{})
