@@ -64,11 +64,11 @@ def main(lines, register):
             continue
         if len(lines[a]) > 3:                                          #if there are more than 2 spaces in the instruction line(string) then print error
             print('InvalidInstruction in line', a+1)
-        try:
-            if len(lines[a]) == 2 and lines[a][0][-1] == ':':          #if there is only 1 space in the string but the first element is a label then it prints error as the format is incorrect
-                print('InvalidInstruction in line', a+1)
-        except:
-            continue
+        # try:
+        #     if len(lines[a]) == 2 and lines[a][0][-1] == ':':          #if there is only 1 space in the string but the first element is a label then it prints error as the format is incorrect
+        #         print('InvalidInstruction in line', a+1)
+        # except:
+        #     continue
 
         if len(lines[a]) == 1:                                         #if there are no spaces in the string then it prints error as the format is incorrect
             print('InvalidInstruction in line', a+1)     
@@ -84,6 +84,9 @@ def main(lines, register):
         try:
             if lines[a][0][-1] != ':':                                  
                 instruction = lines[a][0]
+                if lines[a][0] == lines[a][-1]:
+                    output.append(ff(instruction, line_no = a+1))       #executes when only name instruction is given
+                    continue
                 if lines[a][1].count(',') >2:                           #prints error is number of commas are greater than 2
                     output.append(f'InvalidInstruction in line {a+1}')
                 if lines[a][1].count(',') == 0:                         #prints error if there are no commas in the string
