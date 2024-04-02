@@ -291,6 +291,31 @@ def Jal(rd, imm, register , line_no):
             return ('RegisterNotFound in line ' + str(line_no))
         return 'SyntaxError in line ' + str(line_no)
 
+# Bonus Type Instruction______________________________________________________________________________________4
+
+def Mul(rd, rs1, rs2, register, line_no):
+    try:
+        return('0000000'+register[rs2]+register[rs1]+'000'+register[rd]+'1111111')
+    except:
+        if rs1 or rs2 or rd not in register:
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
+    
+def Rst(register, line_no):
+    return '00000000000000000001000001111111'
+
+def Halt(register, line_no):
+    return '00000000000000000010000001111111'
+
+def Rvrs(rd, rs1, register, line_no):
+    try:
+        return('000000000000'+register[rs1]+'011'+register[rd]+'1111111')
+    except:
+        if rs1 or rd not in register:
+            return('RegisterNotFound in line ' + str(line_no))
+        return 'SyntaxError in line ' + str(line_no)
+    
+
 # Function that checks which instruction is called and then calls that function
 
 def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None , line_no = None):
@@ -343,4 +368,12 @@ def Instruction_Check(inst, rd=None, rs1 = None, rs2 = None , line_no = None):
         return Auipc(rd,rs1,register,line_no)
     elif inst =="jal":
         return Jal(rd,rs1,register,line_no)
+    elif inst =="mul":
+        return Mul(rd,rs1,rs2,register,line_no)
+    elif inst =="rst":
+        return Rst(register,line_no)
+    elif inst =="halt":
+        return Halt(register,line_no)
+    elif inst =="rvrs":
+        return Rvrs(rd,rs1,register,line_no)
     return('IncorrectInstruction in line ' + str(line_no))
