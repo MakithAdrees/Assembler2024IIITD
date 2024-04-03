@@ -1,11 +1,11 @@
-def binary_to_decimal(bin):
-    dec=0
-    power=len(bin)-1
-    for digit in bin:
-        if digit=='1':
-            dec+=2**power
-        power-=1
-    return dec
+# def binary_to_decimal(bin):
+#     dec=0
+#     power=len(bin)-1
+#     for digit in bin:
+#         if digit=='1':
+#             dec+=2**power
+#         power-=1
+#     return dec
 
 def DecToBin(decimal):
     binary = bin(decimal)[2:]
@@ -79,15 +79,32 @@ def Bge(code, registers): #unchecked
     if rs1 >= rs2:
         registers["PC"] = registers["PC"] + imm
         return registers
+        
+def Bgeu(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if rs1 > rs2:
+        registers["PC"] = registers["PC"] + imm
+    return registers
 
-# def Bgeu(code, registers):
-#     # code
 
-# def Blt(code, registers):
-#     # code
+def Blt(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if rs1 < rs2:
+        registers["PC"] = registers["PC"] + imm
+    return registers
 
-# def Bltu(code, registers):
-#     # code
+
+def Bltu(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if rs1 < rs2:
+        registers["PC"] = registers["PC"] + imm
+    return registers
 
 def B_Type(code, registers):
     iType = ["000","001","100","101","110","111"]
@@ -95,9 +112,19 @@ def B_Type(code, registers):
     s = iType.index(code[-15:-12])
     eval(iInst[s])
 
-# U type instructions_______________________________________________________________
+# S type instructions_______________________________________________________________
+def sw(code, registers):
+    rs1 = registers[-20:-15]
+    rs2 = registers[-25:-20]
+    imm = BinToDec(code[-32:-25] + code[-12:-7])
+    #incomplete
+    return registers
 
-
+def S_Type(code, registers):
+    sType = ["010"]
+    sInst = ['sw(code, registers)']
+    s = sType.index(code[-15:-12])
+    return eval(sInst[s])
 
 # J type instructions_______________________________________________________________
     
@@ -108,11 +135,11 @@ def Jal(code, registers): #unchecked
     return registers
 
 def J_Type(code, registers):
-    Jal(code, registers)
+    return Jal(code, registers)
 
 
 
 J_Type('1111111110010111 000 000 1100111',{})
 B_Type('1111111110010111 000 000 1100111',{})
-# U_Type('1111111110010111 000 000 1100111',{})
+S_Type('1111111110010111 000 000 1100111',{})
 J_Type('1111111110010111 000 000 1100111',{})
