@@ -7,36 +7,28 @@ def binary_to_decimal(bin):
         power-=1
     return dec
 
-def DecToBin(decimal):
-    binary = bin(decimal)[2:]
-    return binary
-def BinToDec(binary):
-    decimal = "0000"
-    return decimal
-
 # I type instructions_______________________________________________________________
 
 def addi(code, registers): #unchecked
-    reg = registers[code[-20:-15]]                  #finding registers
-    imm = BinToDec(code[:12])                       #finding immediate
-    sum = imm+reg                                   #finding new rd
+    rs1 = registers[code[-20:-15]]                  #finding registers
+    imm = code[:12]                       #finding immediate
+    sum = BinSum(sext(imm, len(rs1))+rs1)                                   #finding new rd
     registers[code[-12:-7]] = sum                   #rd updated
     return registers
     # print("addi")
 
 def lw(code, registers, memory):   #unchecked
     rs1 = registers[code[-20:-15]]
-    imm = BinToDec(code[:12])
-    registers[code[-12:-7]] = memory[rs1 + imm]
+    imm = code[:12]
+    registers[code[-12:-7]] = memory[BinSum(rs1 + sext(imm, len(rs1)))]
     return registers
     # print("lw")
-
     
 def sltiu(code, registers):
     rs1 = registers[code[-20:-15]]
     imm = code[:12]
-    if imm > rs1:
-        registers[code[-12:-7]] = 1
+    if UBinToDec(imm) > UBinToDec(rs1):
+        registers[code[-12:-7]] = '1'
     return registers
     # print("sltiu")
     
@@ -44,9 +36,9 @@ def sltiu(code, registers):
 def jalr(code, registers):
     rs1 = registers["00101"]
     pc = registers["PC"]
-    imm = BinToDec(code[:12])
-    registers[code[-12:-7]] = pc+4
-    registers["PC"] = rs1 + imm
+    imm = Bin2ToDec(code[:12])
+    registers[code[-12:-7]] = DecToBin(pc+4)
+    registers["PC"] = Bin2ToDec(rs1) + imm
     return registers
     # print("jalr")
     
@@ -64,49 +56,49 @@ def I_Type(code, registers):
 def Beq(code, registers):
     rs1 = registers[code[:7]]
     rs2 = registers[code[-12:-7]]
-    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
-    if rs1 == rs2:
+    imm = Bin2ToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if sext(rs1) == sext(rs2):
         registers["PC"] = registers["PC"] + imm
     return registers
 
 
 def Bne(code, registers): #unchecked
-    rs1 = BinToDec(code[:7])
-    rs2 = BinToDec(code[-12:-7])
-    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
-    if rs1 != rs2:
+    rs1 = registers[code[:7]]
+    rs2 = registers[code[-12:-7]]
+    imm = Bin2ToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if sext(rs1) != sext(rs2):
         registers["PC"] = registers["PC"] + imm
         return registers
 
 def Bge(code, registers): #unchecked
-    rs1 = BinToDec(code[:7])
-    rs2 = BinToDec(code[-12:-7])
-    imm = BinToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
-    if rs1 >= rs2:
+    rs1 = registers[code[:7]]
+    rs2 = registers[code[-12:-7]]
+    imm = Bin2ToDec(code[0] + code[-8] + code[1:7] + code[-12:-8] + '0')
+    if Bin2ToDec(rs1) > Bin2ToDec(rs2):
         registers["PC"] = registers["PC"] + imm
         return registers
 
 def Bgeu(code, registers):
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
-    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
-    if rs1 > rs2:
+    imm = Bin2ToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if UBinToDec(rs1) > UBinToDec(rs2):
         registers["PC"] = registers["PC"] + imm
     return registers
 
 def Blt(code, registers):
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
-    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
-    if rs1 < rs2:
+    imm = Bin2ToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if Bin2ToDec(rs1) < Bin2ToDec(rs2):
         registers["PC"] = registers["PC"] + imm
     return registers
 
 def Bltu(code, registers):
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
-    imm = BinToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
-    if rs1 < rs2:
+    imm = Bin2ToDec(code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0')
+    if Bin2ToDec(rs1) < Bin2ToDec(rs2):
         registers["PC"] = registers["PC"] + imm
     return registers
 
@@ -121,9 +113,9 @@ def B_Type(code, registers):
 def sw(code, registers, memory):  #unchecked
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
-    imm = BinToDec(code[-32:-25] + code[-12:-7])
-    offset = rs1 + imm
-    memory[offset] = rs2
+    imm = Bin2ToDec(code[-32:-25] + code[-12:-7])
+    offset = Bin2ToDec(rs1) + imm
+    memory[offset] = sext(rs2, 32)
     return registers
 
     
@@ -137,8 +129,9 @@ def S_Type(code, registers):
 # J type instructions_______________________________________________________________
     
 def Jal(code, registers): #unchecked
-    imm = BinToDec(code[0] + code[12:21] + code[11] + code[1:11] + '0')
-    registers[code[-12:-7]] = registers["PC"] + 4
+    rd = code[-12:-7]
+    imm = Bin2ToDec(code[0] + code[12:21] + code[11] + code[1:11] + '0')
+    registers[rd] = registers["PC"] + 4
     registers["PC"] = registers["PC"] + imm
     return registers
 
