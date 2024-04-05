@@ -112,9 +112,19 @@ def B_Type(code, registers):
 
 #def R_Type(code,registers);
     #rType = ["000","001","010","011","100","101","110","111"]
-    #rInst = [#fill here]
+    #rInst = []
     #s=rType.index(code[-15:-12])
     #return eval(rInst[s])
+def binary_to_decimal(bin):
+    dec = 0
+    power = 32
+    for digit in bin :
+        if digit =='1':
+            dec +=2**power
+        power-=1
+    return dec
+
+
 def sll(code, registers):
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
