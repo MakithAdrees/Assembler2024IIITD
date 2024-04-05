@@ -108,6 +108,39 @@ def B_Type(code, registers):
     s = bType.index(code[-15:-12])
     return eval(bInst[s])
 
+#R Type - pushed by Arush, Arnesh when you push yours recheck mine I am coding my 4 Instructions and also the R_type function and also U type and dec to bin.
+
+#def R_Type(code,registers);
+    #rType = ["000","001","010","011","100","101","110","111"]
+    #rInst = [#fill here]
+    #s=rType.index(code[-15:-12])
+    #return eval(rInst[s])
+def sll(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    rd = code[-12:-7]
+    shift_amount = rs2 & 0x1F  #to use only lower 5 bit
+    registers[rd] = rs1 << shift_amount
+    return registers
+def srl(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    rd = code[-12:-7]
+    shift_amount = rs2 & 0x1F 
+    registers[rd] = rs1 >> shift_amount
+    return registers
+def or(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    rd = code[-12:-7]
+    registers[rd] = rs1 | rs2
+    return registers
+def and(code, registers):
+    rs1 = registers[code[-20:-15]]
+    rs2 = registers[code[-25:-20]]
+    rd = code[-12:-7]
+    registers[rd] = rs1 & rs2
+    return registers
 
 # S type instructions_______________________________________________________________
 def sw(code, registers, memory):  #unchecked
