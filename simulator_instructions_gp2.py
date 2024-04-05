@@ -108,24 +108,11 @@ def B_Type(code, registers):
     s = bType.index(code[-15:-12])
     return eval(bInst[s])
 
-#R Type - pushed by Arush, Arnesh when you push yours recheck mine I am coding my 4 Instructions and also the R_type function and also U type and dec to bin.
+#R Type ------------------------------------------------------------------
 
-#def R_Type(code,registers);
-    #rType = ["000","001","010","011","100","101","110","111"]
-    #rInst = []
-    #s=rType.index(code[-15:-12])
-    #return eval(rInst[s])
-def binary_to_decimal(bin):
-    dec = 0
-    power = 32
-    for digit in bin :
-        if digit =='1':
-            dec +=2**power
-        power-=1
-    return dec
-
-
-def sll(code, registers):
+#pushed by Arush, Arnesh when you push yours recheck mine I am coding my 4 Instructions and also the R_type function and also U type and dec to bin.
+def sll(code, registers):#unchecked - arenesh pls glance over once before comitting yours final.thanks.
+    
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
     rd = code[-12:-7]
@@ -151,8 +138,45 @@ def and(code, registers):
     rd = code[-12:-7]
     registers[rd] = rs1 & rs2
     return registers
+#def R_Type(code,registers);
+    #rType = ["000","001","010","011","100","101","110","111"]
+    #rInst = []
+    #s=rType.index(code[-15:-12])
+    #return eval(rInst[s])
+# def binary_to_decimal(bin):
+#     dec = 0
+#     power = 32
+#     for digit in bin :
+#         if digit =='1':
+#             dec +=2**power
+#         power-=1
+#     return dec
 
+
+#U Type------------------------------------------------------>
+def uType(code,registers,PC): #Unchecked - Please discuss if it is correct tomorrow, I am unsure about sext part here
+    opcode = code[-7:]
+    
+    rd = code[-12:-7]
+    if opcode == '0110111':
+        
+        registers[rd] = lui(code)
+    elif opcode == '0010111':
+        
+        registers[rd] = auipc(code,PC)
+
+    return registers
+def lui(code):
+    
+    imm = code[:20] << 12
+    return imm
+def auipc(code,PC):
+    imm = code[:20] << 12
+
+    
+    return PC + imm
 # S type instructions_______________________________________________________________
+
 def sw(code, registers, memory):  #unchecked
     rs1 = registers[code[-20:-15]]
     rs2 = registers[code[-25:-20]]
