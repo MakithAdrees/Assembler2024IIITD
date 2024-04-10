@@ -1,3 +1,4 @@
+
 def UnsignedToDecimal(binary):
     dec = 0
     pow = len(binary)-1
@@ -168,3 +169,114 @@ def sw(code, registers, memory):
     return memory
 
 #================================================================================================
+
+def Add(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 + rs2
+    return registers
+#sub rd, rs1, rs2 rd = signed(rs1) - signed(rs2)
+def Sub(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 - rs2
+    return registers
+
+#slt rd, rs1, rs2 rd = 1. If sext(rs1) < sext(rs2)
+def Slt(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    if rs1 < rs2:
+        registers[rd] = 1
+    else:
+        registers[rd] = 0
+    return registers
+
+#sltu rd, rs1, rs2 rd = 1. If unsigned(rs1) < unsigned(rs2)
+def Sltu(code , registers):
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(code[-25:-20]))
+    rs1 = UnsignedToDecimal(DecimalTo2sComplement32bit(code[-20:-15]))
+    rd = code[-12:-7]
+    if rs1 < rs2:
+        registers[rd] = 1
+    else:
+        registers[rd] = 0
+    
+    return registers
+
+
+#xor rd, rs1, rs2 rd = rs1⊕rs2 (Bitwise Exor)
+def Xor(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 ^ rs2
+    return registers
+
+#sll rd, rs1, rs2 rd = rs1<<unsigned(rs2[4:0])
+#Left shift rs1 by the value in lower 5 bits of rs2.
+
+def Sll(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 << rs2
+    return registers
+
+
+#srl rd, rs1, rs2 rd = rs1>>unsigned(rs2[4:0])
+#Right shift rs1 by the value in lower 5 bits of rs2.
+
+def Srl(code , registers):
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(code[-25:-20]) [-5] )
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 >> rs2
+    return registers
+
+#or rd, rs1, rs2 rd = rs1|rs2 (Bitwise logical or.)
+def Or(code , registers):
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(code[-25:-20]) [-5])
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 | rs2
+    return registers
+
+#and rd, rs1, rs2 rd = rs1&rs2 (Bitwise logical and.)
+def And(code , registers):
+    rs2 = code[-25:-20]
+    rs1 = code[-20:-15]
+    rd = code[-12:-7]
+    registers[rd] = rs1 & rs2
+    return registers
+
+
+def R_Type(code, registers):
+    rType = ['000' , '001' , '010' , '011' , '100' , '101' , '110' , '111']
+    rInst = ['Add(code, registers)','Sll(code, registers)','Slt(code, registers)','Sltu(code, registers)','Xor( code, registers)','Srl(code, registers)','Or(code, registers)','And(code, registers)']
+
+    s = rType.index(code[-15:-12])
+
+    if code[-7] == '0100000' and code[-15:12] == "000":
+        return Sub(code, registers)
+    
+    return eval(rInst[s])
+
+def Jal(code, registers):
+    rd = code[-12:-7]
+    imm = SignedToDecimal(code[-32] + code[-20:-11] + code[-21] + code[-31:-21] + '0')
+
+    registers[rd] = registers['PC'] + 1
+    registers['PC'] = registers['PC'] + imm
+    return registers
+
+
+def J_type(code, registers):
+    if code[-7] == '1101111':
+        return Jal(code, registers)                 
+
+
+
