@@ -8,6 +8,16 @@ def UnsignedToDecimal(binary):
         pow -= 1
     return dec
 
+def DectoHexAtoF(decimal):
+    hex = ''
+    while decimal != 0:
+        rem = decimal % 16
+        if rem < 10:
+            hex = str(rem) + hex
+        else:
+            hex = chr(rem + 55) + hex
+        decimal = decimal // 16
+    return hex
 
 def SignedToDecimal(binary):
     pow = len(binary)-2
@@ -175,7 +185,7 @@ def Lw(code, registers, memory):
     rd = code[-12:-7]
     rs1 = code[-20:-15]
     offset = registers[rs1] + imm
-    registers[rd] = memory[offset]
+    registers[rd] = memory[DectoHexAtoF(offset)]
     registers["PC"] = registers["PC"] + 1   
 
     return registers
@@ -202,7 +212,7 @@ def Sw(code, registers, memory):
     rs1 = code[-20:-15]
     rs2 = code[-25:-20]
     offset = registers[rs1] + imm
-    memory[offset] = registers[rs2]
+    memory[DectoHexAtoF(offset)] = registers[rs2]
     registers["PC"] = registers["PC"] + 1  
 
     return memory
@@ -364,9 +374,15 @@ def main():
 
 
     registers_out = ""
+    memory_out = ""
+
     memory = {}
+    #dict from 10000 to 1007c
+    start = 65536
     for i in range(32):
-        memory[i] = 0
+        memory[DectoHexAtoF(start + 4*i)] = 0
+
+
     pc = 0
     while True:
         line = code[pc]
@@ -416,6 +432,10 @@ def main():
             break
         pc = registers["PC"]
 
+
+    for i in range(32):
+        registers_out += "0x000"+ (DectoHexAtoF(start + 4*i)) + ":" + DecimalTo2sComplement32bit(memory[DectoHexAtoF(start + 4*i)])
+        registers_out += "\n"
 
     with open(output_file, 'w') as f:
         f.write(registers_out)
