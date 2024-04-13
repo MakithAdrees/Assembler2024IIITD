@@ -21,7 +21,7 @@ def SignedToDecimal(binary):
 
 def DecimalTo2sComplement32bit(decimal):
     binary = ''
-    if decimal < 0:
+    if (decimal) < 0:
         decimal = 2**32 + decimal
     while decimal != 0:
         binary = str(decimal % 2) + binary
@@ -57,6 +57,7 @@ def Bne(code, registers):
     rs2 = code[-25:-20]
     imm = code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0'
     if registers[rs1] != registers[rs2]:
+        print(registers[rs1], registers[rs2])
         registers["PC"] = registers["PC"] + int(SignedToDecimal(imm)/4)
     else:
         registers["PC"] = registers["PC"] + 1
@@ -281,10 +282,12 @@ def Sll(code , registers):
 #Right shift rs1 by the value in lower 5 bits of rs2.
 
 def Srl(code , registers):
-    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(code[-25:-20]) [-5] )
+    rs2 = code[-25:-20]
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers[rs2]) [-6:-1] )
     rs1 = code[-20:-15]
     rd = code[-12:-7]
-    registers[rd] = registers[rs1] >> registers[rs2]
+    print(code)
+    registers[rd] = registers[rs1] >> rs2
     registers["PC"] = registers["PC"] + 1
 
     return registers
@@ -316,12 +319,13 @@ def R_Type(code, registers):
     rInst = ['Add(code, registers)','Sll(code, registers)','Slt(code, registers)','Sltu(code, registers)','Xor( code, registers)','Srl(code, registers)','Or(code, registers)','And(code, registers)']
 
     s = rType.index(code[-15:-12])
-
-    if code[-7:] == '0100000' and code[-15:12] == "000":
+    print(code[0:7])
+    if code[0:7] == '0100000' and code[-15:-12] == "000":
+        print("Sub")
         return Sub(code, registers)
-
-    print(rInst[s])
-    return eval(rInst[s])
+    else:
+        print(rInst[s])
+        return eval(rInst[s])
 
 def Jal(code, registers):
     rd = code[-12:-7]
@@ -342,6 +346,7 @@ def J_type(code, registers):
 import sys
 
 def main():
+    looper = 0
     input_file = sys.argv[1]
     output_file = sys.argv[2]
 
@@ -363,7 +368,7 @@ def main():
     for i in range(32):
         memory[i] = 0
     pc = 0
-    for i in range(0,46):
+    while True:
         line = code[pc]
 
         #R type 0110011
@@ -397,20 +402,20 @@ def main():
             print("J type")
             registers = J_type(line, registers)
 
-        print("Orginal PC " , pc)
-        print(registers['PC'])
-
-
+        print('PC' , +registers['PC'])
+        registers['00000'] = 0
         registers_out += "0b"+DecimalTo2sComplement32bit(registers["PC"]*4) + " "
         for i in range(32):
             registers_out += "0b"+DecimalTo2sComplement32bit(registers[DecimalTo2sComplement32bit(i)[-5:]]) + " "
-
+        print('looper ', looper)
+        looper += 1
         registers_out += "\n"
         if registers["PC"] == pc:
             break   
         if registers["PC"] >= len(code):
             break
         pc = registers["PC"]
+
 
     with open(output_file, 'w') as f:
         f.write(registers_out)
