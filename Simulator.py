@@ -449,6 +449,10 @@ def main():
             print("J type")
             registers = J_type(line, registers)
 
+        if line[-7:] == "1111111" :
+            print("Bonus type")
+            registers = Bonus(line, registers)
+
         print('PC' , +registers['PC'])
         registers['00000'] = 0
         registers_out += "0b"+DecimalTo2sComplement32bit(registers["PC"]*4) + " "
