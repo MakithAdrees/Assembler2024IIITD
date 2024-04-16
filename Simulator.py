@@ -279,7 +279,7 @@ def Xor(code , registers):
 #Left shift rs1 by the value in lower 5 bits of rs2.
 
 def Sll(code , registers):
-    rs2 = code[-25:-20]
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers(code[-25:-20]))[-5:] )
     rs1 = code[-20:-15]
     rd = code[-12:-7]
     registers[rd] = registers[rs1] << registers[rs2]
@@ -293,7 +293,7 @@ def Sll(code , registers):
 
 def Srl(code , registers):
     rs2 = code[-25:-20]
-    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers[rs2]) [-6:-1] )
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers[rs2]) [-5:] )
     rs1 = code[-20:-15]
     rd = code[-12:-7]
     print(code)
