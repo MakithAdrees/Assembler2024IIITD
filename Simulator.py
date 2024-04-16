@@ -350,6 +350,18 @@ def J_type(code, registers):
     if code[-7:] == '1101111':
         return Jal(code, registers)                 
 
+def Mul(code, registers):
+    rs1 = SignedToDecimal(code[-25:-20])
+    rs2 = SignedToDecimal(code[-20:-15])
+    registers[rd] = rs1*rs2
+    return registers
+
+def Rst(code, registers):
+    PCs = registers["PC"] 
+    registers = {"PC":0}
+    for i in range(32):
+        registers[DecimalTo2sComplement32bit(i)[-5:]] = 0
+    registers["PC"] = PCs
 
 #$python3 Simulator.py input_machine_code_file_path output_trace_file_path
 
