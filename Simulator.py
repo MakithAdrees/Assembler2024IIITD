@@ -1,3 +1,6 @@
+def DecToBin(decimal_num):
+    binary_num = bin(decimal_num)
+    return binary_num[2:]
 
 def UnsignedToDecimal(binary):
     dec = 0
