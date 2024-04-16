@@ -375,7 +375,7 @@ def Halt(code, registers):
 
 def Bonus(code, registers):
     bonus_Type = ["000","001","010","011"]
-    bonus_Inst = ['Mul(code, registers)','Rst(code, registers)','Halt(code, registers)','Rvrs(code, registers)','Bltu(code, registers)','Bgeu(code, registers)']
+    bonus_Inst = ['Mul(code, registers)','Rst(code, registers)','Halt(code, registers)','Rvrs(code, registers)']
     s = bonus_Type.index(code[-15:-12])
     print(bonus_Inst[s])
     return eval(bonus_Inst[s])
