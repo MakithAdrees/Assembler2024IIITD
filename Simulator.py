@@ -364,25 +364,24 @@ def Mul(code, registers):
     return registers
 
 def Rst(code, registers):
-    PCs = registers["PC"] 
-    registers = {"PC":0}
+
     for i in range(32):
         registers[DecimalTo2sComplement32bit(i)[-5:]] = 0
-    registers["PC"] = PCs
     registers["PC"] += 1  
     registers['00010'] = UnsignedToDecimal("00000000000000000000000100000000")
     return registers
 
 def Halt(code, registers):
-    registers["Halt"] = 1
+    registers["PC"]  = -1
     return registers
+
 def Rvrs(code, registers):
     """Reverses the bits of the source register and stores the result in the destination register."""
     rs = code[-20:-15]
     rd = code[-12:-7]   
     
     source_value = registers[rs] 
-    registers[rd] = DecimalTo2sComplement32bit(source_value)[::-1]  
+    registers[rd] = SignedToDecimal(DecimalTo2sComplement32bit(source_value)[::-1]  )
     registers["PC"] += 1  
     return registers
 def Bonus(code, registers):
@@ -390,8 +389,6 @@ def Bonus(code, registers):
     bonus_Inst = ['Mul(code, registers)','Rst(code, registers)','Halt(code, registers)','Rvrs(code, registers)']
     s = bonus_Type.index(code[-15:-12])
     print(bonus_Inst[s])
-    # if result == "halt":
-    #     break
     return eval(bonus_Inst[s])
 
 #================================================================================================
@@ -419,7 +416,6 @@ def main():
 
 
     registers_out = ""
-    memory_out = ""
 
     memory = {}
     #dict from 10000 to 1007c
@@ -428,11 +424,14 @@ def main():
         memory[DectoHexAtoF(start + 4*i)] = 0
 
 
+
     pc = 0
     while True:
         line = code[pc]
 
         #R type 0110011
+        if registers["PC"] == -1:
+            break   
  
         if line[-7:] == "0110011":
             print("R type")
