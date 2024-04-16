@@ -363,6 +363,9 @@ def Rst(code, registers):
         registers[DecimalTo2sComplement32bit(i)[-5:]] = 0
     registers["PC"] = PCs
 
+    registers['00010'] = UnsignedToDecimal("00000000000000000000000100000000")
+    return registers
+
 #$python3 Simulator.py input_machine_code_file_path output_trace_file_path
 
 import sys
