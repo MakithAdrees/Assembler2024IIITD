@@ -350,6 +350,9 @@ def J_type(code, registers):
     if code[-7:] == '1101111':
         return Jal(code, registers)                 
 
+#================================================================================================
+#Bonus Instructions
+
 def Mul(code, registers):
     rs1 = SignedToDecimal(code[-25:-20])
     rs2 = SignedToDecimal(code[-20:-15])
@@ -365,6 +368,13 @@ def Rst(code, registers):
 
     registers['00010'] = UnsignedToDecimal("00000000000000000000000100000000")
     return registers
+
+def Halt(code, registers):
+    registers["Halt"] = 1
+    return registers
+
+
+#================================================================================================
 
 #$python3 Simulator.py input_machine_code_file_path output_trace_file_path
 
