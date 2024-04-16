@@ -359,6 +359,7 @@ def J_type(code, registers):
 def Mul(code, registers):
     rs1 = SignedToDecimal(code[-25:-20])
     rs2 = SignedToDecimal(code[-20:-15])
+    registers["PC"] += 1  
     registers[rd] = rs1*rs2
     return registers
 
@@ -368,19 +369,29 @@ def Rst(code, registers):
     for i in range(32):
         registers[DecimalTo2sComplement32bit(i)[-5:]] = 0
     registers["PC"] = PCs
-
+    registers["PC"] += 1  
     registers['00010'] = UnsignedToDecimal("00000000000000000000000100000000")
     return registers
 
 def Halt(code, registers):
     registers["Halt"] = 1
     return registers
-
+def Rvrs(code, registers):
+    """Reverses the bits of the source register and stores the result in the destination register."""
+    rs = code[-20:-15]
+    rd = code[-12:-7]   
+    
+    source_value = registers[rs] 
+    registers[rd] = DecimalTo2sComplement32bit(source_value)[::-1]  
+    registers["PC"] += 1  
+    return registers
 def Bonus(code, registers):
     bonus_Type = ["000","001","010","011"]
     bonus_Inst = ['Mul(code, registers)','Rst(code, registers)','Halt(code, registers)','Rvrs(code, registers)']
     s = bonus_Type.index(code[-15:-12])
     print(bonus_Inst[s])
+    # if result == "halt":
+    #     break
     return eval(bonus_Inst[s])
 
 #================================================================================================
