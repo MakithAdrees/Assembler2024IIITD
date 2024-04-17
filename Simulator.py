@@ -18,9 +18,11 @@ def DectoHexAtoF(decimal):
         if rem < 10:
             hex = str(rem) + hex
         else:
-            hex = chr(rem + 55) + hex
+            x = chr(rem + 55)
+            x = x.lower()
+            hex = x + hex
         decimal = decimal // 16
-    return hex
+    return hex.lower()
 
 def SignedToDecimal(binary):
     pow = len(binary)-2
@@ -51,7 +53,6 @@ def B_Type(code, registers):
     bType = ["000","001","100","101","110","111"]
     bInst = ['Beq(code, registers)','Bne(code, registers)','Blt(code, registers)','Bge(code, registers)','Bltu(code, registers)','Bgeu(code, registers)']
     s = bType.index(code[-15:-12])
-    print(bInst[s])
     return eval(bInst[s])
 
 def Beq(code, registers):
@@ -70,7 +71,6 @@ def Bne(code, registers):
     rs2 = code[-25:-20]
     imm = code[-32] + code[-8] + code[-31:-25] + code[-12:-8] + '0'
     if registers[rs1] != registers[rs2]:
-        print(registers[rs1], registers[rs2])
         registers["PC"] = registers["PC"] + int(SignedToDecimal(imm)/4)
     else:
         registers["PC"] = registers["PC"] + 1
@@ -153,7 +153,6 @@ def I_Type(code, registers , memory):
     iterate = 4
     if code[-7:] == "0010011":
         iterate = 3
-    print(iType[s+iterate])
     return eval(iType[s+iterate])
 
 def Addi(code, registers):
@@ -282,10 +281,12 @@ def Xor(code , registers):
 #Left shift rs1 by the value in lower 5 bits of rs2.
 
 def Sll(code , registers):
-    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers(code[-25:-20]))[-5:] )
+    rs2 = code[-25:-20]
+    rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers[rs2]) [-5:] )
     rs1 = code[-20:-15]
     rd = code[-12:-7]
-    registers[rd] = registers[rs1] << registers[rs2]
+
+    registers[rd] = registers[rs1] << rs2
     registers["PC"] = registers["PC"] + 1
 
     return registers
@@ -299,7 +300,6 @@ def Srl(code , registers):
     rs2 = UnsignedToDecimal(DecimalTo2sComplement32bit(registers[rs2]) [-5:] )
     rs1 = code[-20:-15]
     rd = code[-12:-7]
-    print(code)
     registers[rd] = registers[rs1] >> rs2
     registers["PC"] = registers["PC"] + 1
 
@@ -332,12 +332,9 @@ def R_Type(code, registers):
     rInst = ['Add(code, registers)','Sll(code, registers)','Slt(code, registers)','Sltu(code, registers)','Xor( code, registers)','Srl(code, registers)','Or(code, registers)','And(code, registers)']
 
     s = rType.index(code[-15:-12])
-    print(code[0:7])
     if code[0:7] == '0100000' and code[-15:-12] == "000":
-        print("Sub")
         return Sub(code, registers)
     else:
-        print(rInst[s])
         return eval(rInst[s])
 
 def Jal(code, registers):
@@ -388,7 +385,6 @@ def Bonus(code, registers):
     bonus_Type = ["000","001","010","011"]
     bonus_Inst = ['Mul(code, registers)','Rst(code, registers)','Halt(code, registers)','Rvrs(code, registers)']
     s = bonus_Type.index(code[-15:-12])
-    print(bonus_Inst[s])
     return eval(bonus_Inst[s])
 
 #================================================================================================
@@ -434,44 +430,35 @@ def main():
             break   
  
         if line[-7:] == "0110011":
-            print("R type")
             registers = R_Type(line, registers)
 
         #I type 0000011 or 0010011 or 1100111
         if line[-7:] == "0000011" or line[-7:] == "0010011" or line[-7:] == "1100111":
-            print("I type")
             registers = I_Type(line, registers, memory)
 
         #S type 0100011
         if line[-7:] == "0100011":
-            print("S type")
             memory = S_Type(line, registers, memory)
 
         #B type 1100011
         if line[-7:] == "1100011":
-            print("B type")
             registers = B_Type(line, registers)
 
         #U type 0010111 or 0110111
         if line[-7:] == "0010111" or line[-7:] == "0110111":
-            print("U type")
             registers = U_Type(line, registers)
   
         #J type 1101111
         if line[-7:] == "1101111" :
-            print("J type")
             registers = J_type(line, registers)
 
         if line[-7:] == "1111111" :
-            print("Bonus type")
             registers = Bonus(line, registers)
 
-        print('PC' , +registers['PC'])
         registers['00000'] = 0
         registers_out += "0b"+DecimalTo2sComplement32bit(registers["PC"]*4) + " "
         for i in range(32):
             registers_out += "0b"+DecimalTo2sComplement32bit(registers[DecimalTo2sComplement32bit(i)[-5:]]) + " "
-        print('looper ', looper)
         looper += 1
         registers_out += "\n"
         if registers["PC"] == pc:
@@ -482,7 +469,7 @@ def main():
 
 
     for i in range(32):
-        registers_out += "0x000"+ (DectoHexAtoF(start + 4*i)) + ":" + DecimalTo2sComplement32bit(memory[DectoHexAtoF(start + 4*i)])
+        registers_out += "0x000"+ (DectoHexAtoF(start + 4*i)) + ":" + "0b"+DecimalTo2sComplement32bit(memory[DectoHexAtoF(start + 4*i)])
         registers_out += "\n"
 
     with open(output_file, 'w') as f:
