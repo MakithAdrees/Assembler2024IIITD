@@ -221,7 +221,7 @@ def Bgeu(rs1, rs2, imm, register , line_no):
     except:
         return 'Label not found in line ' + str(line_no)
     try:
-        return (ImmToBin(imm)[-13] + ImmToBin(imm)[-11:-5] + register[rs2] + register[rs1] + '111' + ImmToBin(imm)[-4:0] + ImmToBin(imm)[-11] + '1100011')
+        return (ImmToBin(imm)[-13] + ImmToBin(imm)[-11:-5] + register[rs2] + register[rs1] + '111' + ImmToBin(imm)[-5:-1] + ImmToBin(imm)[-12] + '1100011')
     except:
         if rs1 or rs2 not in register:
             return ('RegisterNotFound in line ' + str(line_no))
