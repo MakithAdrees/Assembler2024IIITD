@@ -333,14 +333,16 @@ def R_Type(code, registers):
     else:
         return eval(rInst[s])
 
+
 def Jal(code, registers):
     rd = code[-12:-7]
     imm = SignedToDecimal(code[-32] + code[-20:-11] + code[-21] + code[-31:-21] + '0')
-
     registers[rd] = registers['PC']*4 + 4
+    x = DecimalTo2sComplement32bit(registers["PC"] * 4)
+    y = x[:-1] + "0"
+    registers['PC'] =  SignedToDecimal(y) // 4
     registers['PC'] = registers['PC'] + int(imm/4)
     return registers
-
 
 def J_type(code, registers):
     if code[-7:] == '1101111':
