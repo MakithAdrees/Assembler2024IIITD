@@ -247,8 +247,6 @@ def Slt(code , registers):
     rd = code[-12:-7]
     if registers[rs1] < registers[rs2]:
         registers[rd] = 1
-    else:
-        registers[rd] = 0
     registers["PC"] = registers["PC"] + 1
 
     return registers
@@ -260,8 +258,6 @@ def Sltu(code , registers):
     rd = code[-12:-7]
     if rs1 < rs2:
         registers[rd] = 1
-    else:
-        registers[rd] = 0
     registers["PC"] = registers["PC"] + 1
 
     return registers
