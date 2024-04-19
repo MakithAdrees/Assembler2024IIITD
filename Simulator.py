@@ -303,8 +303,8 @@ def Srl(code , registers):
 
 #or rd, rs1, rs2 rd = rs1|rs2 (Bitwise logical or.)
 def Or(code , registers):
-    rs2 = registers(code[-25:-20])
-    rs1 = registers(code[-20:-15])
+    rs2 = registers[code[-25:-20]]
+    rs1 = registers[code[-20:-15]]
     rd = code[-12:-7]
     registers[rd] = rs1 | rs2
     registers["PC"] = registers["PC"] + 1
